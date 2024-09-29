@@ -52,7 +52,8 @@ export async function adWorkflow({ prompt }: Input) {
         taskQueue: lumaaiTaskQueue,
       }
     ).lumaaiGenerate({
-      prompt: "make me an ad of a romanticcouple in Paris with Eiffel tower.",
+      prompt:
+        "make me an ad of a romantic couple of robots in Paris with Eiffel tower at night. Make it look epic with a slow motion effect and with a low angle.",
       aspectRatio: "9:21",
       extendGenerationId: previousGenerationId,
     });
