@@ -14,7 +14,7 @@ In this example, we wanted to programatically make ads for AI robots that needs 
 docker run -d --pull always --name studio -p 5233:5233 -p 6233:6233 -p 7233:7233 ghcr.io/restackio/local-operator:main
 ```
 
-Learn more at https://www.restack.io/autonomous-framework
+Learn more at https://www.restack.io/restack-autonomous-framework
 
 ## How to use
 
