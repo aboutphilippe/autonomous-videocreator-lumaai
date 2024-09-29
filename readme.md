@@ -33,7 +33,7 @@ pnpm schedule
 pnpm schedule
 
 
-## You should Restack Engine UI with the following 
+## You should see Restack Engine UI with the following 
 
 ![localhost_5233__workflowId=1727553068979-adWorkflow runId=f03e205b-6891-4692-a94e-a9cc006c8ede scheduledEventId=44 (1)](https://github.com/user-attachments/assets/63ebdcff-94cd-44d7-95f3-80877be5c436)
 
