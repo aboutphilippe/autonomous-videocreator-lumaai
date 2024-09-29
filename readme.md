@@ -1,6 +1,4 @@
 
-![auto-video (1)](https://github.com/user-attachments/assets/56edeb97-6d81-4d1b-8e76-15817d57045f)
-
 # Because AI robots deserve holidays too!
 
 Hackarthin project from https://lu.ma/royrg8gx?tk=LXmV68
