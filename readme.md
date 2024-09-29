@@ -1,4 +1,14 @@
-Because AI robots deserve holidays too!
+
+![auto-video (1)](https://github.com/user-attachments/assets/56edeb97-6d81-4d1b-8e76-15817d57045f)
+
+# Because AI robots deserve holidays too!
+
+Hackarthin project from https://lu.ma/royrg8gx?tk=LXmV68
+
+A fully autonomous video production that creates shorts for Youtube/Tiktok using Mistral AI for script, Azure TTS for audio and Luma AI for video.
+In this example, we wanted to programtically make ads for AI robots that needs a break.
+
+![auto-video-screenshot](https://github.com/user-attachments/assets/6e5313f7-5057-4a02-9616-f31de5145913)
 
 ## Run Restack Engine
 
