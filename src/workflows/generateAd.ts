@@ -43,40 +43,50 @@ export async function adWorkflow({ prompt }: Input) {
 
   log.info("audio", { audio });
 
-  const { generation: queuedGeneration } = await step<typeof lumaaiFunctions>({
-    taskQueue: lumaaiTaskQueue,
-  }).lumaaiGenerate({
-    prompt:
-      "make me an ad of a robot in holidays at the beach. with a white hat, a blue bermuda and a beach bag on her shoulder",
-    aspectRatio: "9:21",
-  });
+  let lastVideoUrl: string | undefined;
+  let previousGenerationId: string | undefined;
 
-  log.info("queuedGeneration", { queuedGeneration });
-  let video;
-
-  if (queuedGeneration?.id) {
-    while (!video || video.state !== "completed") {
-      const { generation } = await step<typeof lumaaiFunctions>({
+  for (let i = 0; i < 3; i++) {
+    const { generation: queuedGeneration } = await step<typeof lumaaiFunctions>(
+      {
         taskQueue: lumaaiTaskQueue,
-      }).lumaaiGetGeneration({
-        generationId: queuedGeneration?.id,
-      });
-      video = generation;
-      await sleep(60000);
-    }
-
-    log.info("generation", { video });
-
-    const { outputPath } = await step<typeof functions>({}).mergeVideos({
-      generationId: queuedGeneration?.id,
-      videoUrl: video?.assets?.video!,
-      audioBase64: audio.payload,
+      }
+    ).lumaaiGenerate({
+      prompt: "make me an ad of a romanticcouple in Paris with Eiffel tower.",
+      aspectRatio: "9:21",
+      extendGenerationId: previousGenerationId,
     });
 
+    log.info(`queuedGeneration ${i + 1}`, { queuedGeneration });
+
+    let video;
+    if (queuedGeneration?.id) {
+      while (!video || video.state !== "completed") {
+        const { generation } = await step<typeof lumaaiFunctions>({
+          taskQueue: lumaaiTaskQueue,
+        }).lumaaiGetGeneration({
+          generationId: queuedGeneration?.id,
+        });
+        video = generation;
+        await sleep(60000);
+      }
+
+      log.info(`generation ${i + 1}`, { video });
+      lastVideoUrl = video?.assets?.video!;
+      previousGenerationId = queuedGeneration.id;
+    }
+  }
+
+  if (lastVideoUrl) {
+    const { outputPath } = await step<typeof functions>({}).mergeVideos({
+      videoUrl: lastVideoUrl,
+      generationId: previousGenerationId!,
+      audioBase64: audio.payload,
+    });
     return {
       outputPath,
       audio,
-      video,
+      videos: [lastVideoUrl], // Return the last video URL
     };
   }
 }

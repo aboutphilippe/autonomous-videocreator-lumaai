@@ -15,8 +15,8 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6
       '@restackio/integrations-lumaai':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       '@restackio/integrations-openai':
         specifier: ^0.0.23
         version: 0.0.23(zod@3.23.8)
@@ -256,8 +256,8 @@ packages:
   '@restackio/integrations-azurespeech@0.0.6':
     resolution: {integrity: sha512-y8ejgSja4TQG6feSZ9E4LiPFqs2oFUnX81+znibaKFsIQPNJndiP4QsnDNWWiC/3jq8Ey/OSw4ja/MbAY4njcA==}
 
-  '@restackio/integrations-lumaai@0.0.4':
-    resolution: {integrity: sha512-uM5tndscNSx5YEq83XwDD63Tr73T2+Sz0iS1lf+DKuFdgpukMyeMm2QCaDSoKwMQqRFzEanIIBr9FXA9iz5lOw==}
+  '@restackio/integrations-lumaai@0.0.5':
+    resolution: {integrity: sha512-2AuP4m53eXajCj6ZN9m7Y/34+G7mK8O0nzV3bBy5TPGOogFD0r2YsdUFyu5oGfX/lCxIggUQC0bCOH5v88zvpw==}
 
   '@restackio/integrations-openai@0.0.23':
     resolution: {integrity: sha512-cTKk3mirbn25i4S/wG5b0o6gAoiPojkHptIP0q/C0aTLysm/Ps0daL4cVY/Q0hXmKfXLQ9+rxHkJOLS5zhMYrw==}
@@ -1612,7 +1612,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@restackio/integrations-lumaai@0.0.4':
+  '@restackio/integrations-lumaai@0.0.5':
     dependencies:
       lumaai: 1.0.2
     transitivePeerDependencies:

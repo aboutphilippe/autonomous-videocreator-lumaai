@@ -7,10 +7,9 @@ async function services() {
   const workflowsPath = require.resolve("./workflows");
   try {
     await Promise.all([
-      // Start the mistral service
       client.startService({
         workflowsPath,
-        functions: { mistralGenerateText },
+        functions: { mistralGenerateText, mergeVideos },
         options: {
           rateLimit: 1000,
         },
@@ -20,10 +19,6 @@ async function services() {
       // Start the luma service
       lumaaiService({ client }),
       // Start the merge videos service
-      client.startService({
-        workflowsPath,
-        functions: { mergeVideos },
-      }),
     ]);
 
     console.log("Services running successfully.");
