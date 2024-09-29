@@ -15,5 +15,7 @@ export async function mistralGenerateText(input: Input): Promise<Output> {
     prompt: `${input.prompt}`,
   });
 
-  return { message: text };
+  const cleanedText = text.replace(/^"|"$/g, "");
+
+  return { message: cleanedText };
 }
