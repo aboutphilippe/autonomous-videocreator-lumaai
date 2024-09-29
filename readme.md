@@ -6,10 +6,25 @@ Because AI robots deserve holidays too!
 docker run -d --pull always --name studio -p 5233:5233 -p 6233:6233 -p 7233:7233 ghcr.io/restackio/local-operator:main
 ```
 
+Learn more at https://www.restack.io/autonomous-framework
+
 ## How to use
 
+run services in the background
+
+```
 pnpm dev
+```
+
+in another shell, schedule the workflow
+
+```
 pnpm schedule
+```
+
+pnpm schedule
+
+## How it works
 
 ## Step 1
 
@@ -25,16 +40,24 @@ Use Lumaai to make the video
 
 ## Step 4
 
-Upload the video to YouTube
+Extend Lumaai to 15s video
 
 ## Step 5
 
-Analyse watch time and behavior
+Merge bideo and audio
 
-## Step 6
+<!-- ## Step 6
 
-Send report and ask for feedback
+Upload the video to YouTube
 
 ## Step 7
 
-Implement feedback and repeat
+Analyse watch time and behavior
+
+## Step 8
+
+Send report and ask for feedback
+
+## Step 9
+
+Implement feedback and repeat -->
