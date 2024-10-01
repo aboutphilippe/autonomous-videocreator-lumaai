@@ -49,19 +49,19 @@ const dummyMessages = [
     source: { sourceId: "source1" },
     title: "Message 1",
     body: "This is the body of message 1",
-    url: "http://example.com/1",
+    url: "media/143e022b-d18b-45f2-b639-53f678d05cfa_merged.mp4",
     createdAt: new Date("2023-10-01T00:00:00Z"),
     author: { name: "Author 1" },
     state: "open",
-    labels: [{ name: "good first issue" }],
-    aiItems: [
-      {
-        response: {
-          summary: "Summary 1",
-          priority: "High",
-        },
-      },
-    ],
+    // labels: [{ name: "good first issue" }],
+    // aiItems: [
+    //   {
+    //     response: {
+    //       summary: "Summary 1",
+    //       priority: "High",
+    //     },
+    //   },
+    // ],
   },
   // Add more dummy messages as needed
 ];

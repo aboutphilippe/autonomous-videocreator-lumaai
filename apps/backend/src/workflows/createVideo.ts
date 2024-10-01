@@ -11,9 +11,15 @@ interface Input {
   title: string;
   prompt: string;
   fromImageUrl?: string;
+  sessionAccessToken?: string;
 }
 
-export async function createVideo({ title, prompt, fromImageUrl }: Input) {
+export async function createVideo({
+  title,
+  prompt,
+  fromImageUrl,
+  sessionAccessToken,
+}: Input) {
   const resultPromptVideo = await step<typeof openaiFunctions>({
     taskQueue: openaiTaskQueue,
   }).openaiChatCompletionsBase({
@@ -61,7 +67,11 @@ export async function createVideo({ title, prompt, fromImageUrl }: Input) {
   let lastVideoUrl: string | undefined;
   let previousGenerationId: string | undefined;
 
-  for (let i = 0; i < 4; i++) {
+  const { publicUrl } = await step<typeof functions>({}).uploadImageToBucket({
+    imageUrl: fromImageUrl!,
+  });
+
+  for (let i = 0; i < 1; i++) {
     const { generation: queuedGeneration } = await step<typeof lumaaiFunctions>(
       {
         taskQueue: lumaaiTaskQueue,
@@ -71,7 +81,7 @@ export async function createVideo({ title, prompt, fromImageUrl }: Input) {
         Make it look epic with a slow motion effect and with a low angle.`,
       aspectRatio: "9:16",
       extendGenerationId: previousGenerationId,
-      fromImageUrl: previousGenerationId ? "" : fromImageUrl,
+      fromImageUrl: previousGenerationId ? undefined : publicUrl,
     });
 
     log.info(`queuedGeneration ${i + 1}`, { queuedGeneration });
@@ -100,10 +110,27 @@ export async function createVideo({ title, prompt, fromImageUrl }: Input) {
       generationId: previousGenerationId!,
       audioBase64: audio.payload,
     });
+
+    if (sessionAccessToken) {
+      const youtubeVideo = await step<typeof functions>({}).youtubeUpload({
+        title,
+        description: videoPrompt,
+        filePath: outputPath,
+        sessionAccessToken,
+      });
+
+      return {
+        youtubeVideo,
+        outputPath,
+        audio,
+        videos: [lastVideoUrl],
+      };
+    }
+
     return {
       outputPath,
       audio,
-      videos: [lastVideoUrl], // Return the last video URL
+      videos: [lastVideoUrl],
     };
   }
 }

@@ -27,18 +27,23 @@ export function SeriesCard({
 }) {
   const { workflowId, runId, output } = series;
   const { title, prompt, imagePreviews } = output;
+
+  console.log("imagePreviews", imagePreviews);
   const imageUrl = imagePreviews[0].images[0].url;
 
   const engineUrl = `http://localhost:5233/?workflowId=${workflowId}&runId=${runId}`;
 
   const handleCreateVideos = async (event: React.FormEvent) => {
-    for (const imagePreview of imagePreviews) {
-      const workflowResult = await triggerWorkflow("createVideo", {
+    const workflowPromises = imagePreviews.map((imagePreview) =>
+      triggerWorkflow("createVideo", {
         title: imagePreview.title,
         prompt: imagePreview.imagePrompt,
         fromImageUrl: imagePreview.images[0].url,
-      });
-    }
+      })
+    );
+
+    const workflowResults = await Promise.all(workflowPromises);
+    console.log("workflowResults", workflowResults);
   };
 
   return (

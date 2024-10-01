@@ -1,7 +1,5 @@
-import Image from "next/image";
-import Examples from "./components/Examples"; // Import the Examples component
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { Separator } from "./components/ui/separator";
+import SignIn from "./components/sign-in";
 import Series from "./series/Series";
 import Videos from "./videos/page";
 import { ThemeToggle } from "./components/theme-toggle";
@@ -35,6 +33,7 @@ export default function Home() {
             <Videos />
           </TabsContent>
         </Tabs>
+        <SignIn />
       </main>
     </div>
   );

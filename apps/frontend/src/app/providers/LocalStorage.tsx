@@ -14,12 +14,17 @@ export const LocalStorageContext = createContext<
 
 export const LocalStorageProvider = ({ children }: { children: ReactNode }) => {
   const [series, setSeries] = useState<SeriesType[]>(() => {
-    const savedSeries = localStorage.getItem("series");
-    return savedSeries ? JSON.parse(savedSeries) : [];
+    if (typeof window !== "undefined") {
+      const savedSeries = localStorage.getItem("series");
+      return savedSeries ? JSON.parse(savedSeries) : [];
+    }
+    return [];
   });
 
   useEffect(() => {
-    localStorage.setItem("series", JSON.stringify(series));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("series", JSON.stringify(series));
+    }
   }, [series]);
 
   return (

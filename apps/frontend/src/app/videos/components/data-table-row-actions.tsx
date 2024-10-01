@@ -20,6 +20,7 @@ import {
 
 import { labels } from "./filtersData";
 import { messageSchema } from "../schema";
+import Link from "next/link";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -42,6 +43,9 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
+        <DropdownMenuItem>
+          <Link href={`${message.url}`}>Play</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>Edit</DropdownMenuItem>
         <DropdownMenuItem>Make a copy</DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
