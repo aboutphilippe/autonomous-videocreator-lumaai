@@ -1,0 +1,38 @@
+# service dependencies for apps
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+      # - engine
+    restart: always
+    extra_hosts:
+      - 'localhost:host-gateway'
+    env_file:
+      - .env
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./apps/backend/Dockerfile
+    # depends_on:
+    #   - engine
+    restart: always
+    extra_hosts:
+      - 'localhost:host-gateway'
+    env_file:
+      - .env
+  # engine:
+  #   container_name: engine
+  #   image: ghcr.io/restackio/local-operator:main
+  #   ports:
+  #     - "5233:5233"
+  #     - "6233:6233"
+  #     - "7233:7233"
+  #   extra_hosts:
+  #   - 'localhost:host-gateway'
