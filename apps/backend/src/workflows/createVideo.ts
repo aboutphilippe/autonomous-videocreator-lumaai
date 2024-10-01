@@ -4,41 +4,52 @@ import { azureSpeechTaskQueue } from "@restackio/integrations-azurespeech/taskQu
 import * as azureSpeechFunctions from "@restackio/integrations-azurespeech/functions";
 import { lumaaiTaskQueue } from "@restackio/integrations-lumaai/taskQueue";
 import * as lumaaiFunctions from "@restackio/integrations-lumaai/functions";
-import { falTaskQueue } from "@restackio/integrations-fal/taskQueue";
-import * as falFunctions from "@restackio/integrations-fal/functions";
+import { openaiTaskQueue } from "@restackio/integrations-openai/taskQueue";
+import * as openaiFunctions from "@restackio/integrations-openai/functions";
 
 interface Input {
+  title: string;
   prompt: string;
   fromImageUrl?: string;
 }
 
-export async function adWorkflow({ prompt, fromImageUrl }: Input) {
-  const { message: lumaPrompt } = await step<typeof functions>(
-    {}
-  ).mistralGenerateText({
-    prompt: `
+export async function createVideo({ title, prompt, fromImageUrl }: Input) {
+  const resultPromptVideo = await step<typeof openaiFunctions>({
+    taskQueue: openaiTaskQueue,
+  }).openaiChatCompletionsBase({
+    userContent: `
     I want to prompt a text to video model to make a 15s video ad.
     Make it short and concise. Just give me the prompt for lumaai ${prompt}`,
   });
 
-  const { message: audioAd } = await step<typeof functions>(
-    {}
-  ).mistralGenerateText({
-    prompt: `
+  const videoPrompt = resultPromptVideo.result.choices[0].message.content;
+
+  if (!videoPrompt) {
+    throw new Error("No video prompt");
+  }
+
+  const resultPromptAudio = await step<typeof openaiFunctions>({
+    taskQueue: openaiTaskQueue,
+  }).openaiChatCompletionsBase({
+    userContent: `
       Make the text for the voiceover of a video. 
       It needs to be 13s long so make it short and concise.
       This reponse is used by text to speech, make it as natural as possible.
-      Make it sounds like David Attenborough describing the scene "${lumaPrompt}".
+      Make it sounds like David Attenborough describing the scene "${videoPrompt}".
       Only output the text, no intro, no outro, no hashtags, no emojis, no nothing.
     `,
   });
 
-  log.info("lumaPrompt", { lumaPrompt });
+  const audioPrompt = resultPromptAudio.result.choices[0].message.content;
+
+  if (!audioPrompt) {
+    throw new Error("No audio prompt");
+  }
 
   const { media: audio } = await step<typeof azureSpeechFunctions>({
     taskQueue: azureSpeechTaskQueue,
   }).azureSpeech({
-    text: audioAd,
+    text: audioPrompt,
     config: {
       voiceName: "en-US-DavisNeural",
       format: 22,

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Separator } from "@/app/components/ui/separator";
 import { SeriesCard } from "./SeriesCard";
 import { SeriesForm } from "./SeriesForm";
@@ -10,20 +10,36 @@ import {
   DialogContent,
 } from "@/app/components/ui/dialog";
 import { Button } from "@/app/components/ui/button";
+import { LocalStorageContext } from "../providers/LocalStorage";
+import { demoSeries } from "../providers/demoData";
+
+export type SeriesType = {
+  workflowId: string;
+  runId: string;
+  output: {
+    title: string;
+    prompt: string;
+    imagePreviews: {
+      title: string;
+      imagePrompt: string;
+      images: { url: string }[];
+    }[];
+  };
+};
 
 export default function Series() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [series, setSeries] = useState([
-    { id: 1, title: "Series 1", description: "Description 1" },
-    { id: 2, title: "Series 2", description: "Description 2" },
-    { id: 3, title: "Series 3", description: "Description 3" },
-  ]);
+  const { series, setSeries } = useContext(LocalStorageContext) || {
+    series: demoSeries,
+    setSeries: () => {},
+  };
 
   const handleClose = () => setIsDialogOpen(false);
-  const handleSuccess = (newSeries) => {
+  const handleSuccess = async (newSeries: any) => {
     setSeries([...series, newSeries]);
-    handleClose();
   };
+
+  console.log("series", series);
 
   return (
     <>
@@ -48,7 +64,7 @@ export default function Series() {
       <div className="p-4">
         <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-3 xl:grid-cols-4">
           {series.map((series) => (
-            <SeriesCard key={series.id} {...series} />
+            <SeriesCard series={series} />
           ))}
         </div>
       </div>

@@ -27,8 +27,8 @@ importers:
         specifier: ^0.0.6
         version: 0.0.6
       '@restackio/integrations-fal':
-        specifier: ^0.0.4
-        version: 0.0.4
+        specifier: ^0.0.5
+        version: 0.0.5
       '@restackio/integrations-lumaai':
         specifier: ^0.0.8
         version: 0.0.8
@@ -1104,8 +1104,8 @@ packages:
   '@restackio/integrations-azurespeech@0.0.6':
     resolution: {integrity: sha512-y8ejgSja4TQG6feSZ9E4LiPFqs2oFUnX81+znibaKFsIQPNJndiP4QsnDNWWiC/3jq8Ey/OSw4ja/MbAY4njcA==}
 
-  '@restackio/integrations-fal@0.0.4':
-    resolution: {integrity: sha512-RZ1E6wAWFoDCkGnlw4MLR0jfYpzI7VcDcNhjxboofzxli2dEmDBm6yRmU8CpZU7HHr4snh7Hn1jB5oMMJ0pukA==}
+  '@restackio/integrations-fal@0.0.5':
+    resolution: {integrity: sha512-53SKfsmdyND7Ys22Zxe/jF5g/vAhfAzM910p3/47BrSGNKAeHWs+szdRIx1jnpnPdhrQvX1NkGdvfUVXxTZW4g==}
 
   '@restackio/integrations-lumaai@0.0.8':
     resolution: {integrity: sha512-5wF8c8Ihj3BI/Sh9veyj3zlSdMfD9fyNDGwAG3ZUgm8YnLLGY43FzRorboTncgp5CuUfZI5zNU6/HxCt2xd6aw==}
@@ -4708,7 +4708,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@restackio/integrations-fal@0.0.4':
+  '@restackio/integrations-fal@0.0.5':
     dependencies:
       '@fal-ai/serverless-client': 0.14.3
 

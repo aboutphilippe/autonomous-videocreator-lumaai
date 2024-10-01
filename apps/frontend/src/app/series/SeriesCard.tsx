@@ -12,37 +12,42 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import { format } from "date-fns";
 import Link from "next/link";
 import { MoreVertical } from "lucide-react";
-
-// Define the Series type
-export interface Series {
-  id: number;
-  type: string;
-  seriesId: string;
-  name: string;
-  url: string;
-  description: string;
-  createdAt: Date;
-  enabled: boolean;
-}
+import Image from "next/image";
+import { triggerWorkflow } from "../actions/trigger";
+import { SeriesType } from "./Series";
 
 export function SeriesCard({
-  id,
-  type,
-  seriesId,
-  name,
-  url,
-  description,
-  createdAt,
+  series,
   enabled,
-}: Series) {
+}: {
+  series: SeriesType;
+  enabled?: boolean;
+}) {
+  const { workflowId, runId, output } = series;
+  const { title, prompt, imagePreviews } = output;
+  const imageUrl = imagePreviews[0].images[0].url;
+
+  const engineUrl = `http://localhost:5233/?workflowId=${workflowId}&runId=${runId}`;
+
+  const handleCreateVideos = async (event: React.FormEvent) => {
+    for (const imagePreview of imagePreviews) {
+      const workflowResult = await triggerWorkflow("createVideo", {
+        title: imagePreview.title,
+        prompt: imagePreview.imagePrompt,
+        fromImageUrl: imagePreview.images[0].url,
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="space-y-5">
         <div className="flex justify-between items-center">
-          <CardTitle className={!enabled ? "opacity-50" : ""}>{name}</CardTitle>
+          <CardTitle className={!enabled ? "opacity-50" : ""}>
+            {title}
+          </CardTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -52,33 +57,43 @@ export function SeriesCard({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
-                <Link href={url} target="_blank">
-                  Visit
+                <Link href={engineUrl} target="_blank">
+                  Open in Engine
                 </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCreateVideos}>
+                Start creating videos
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => {}}>
                 {enabled ? "Disable" : "Enable"}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {}}>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
         <CardDescription className="line-clamp-2 pr-10 h-10">
-          {description}
+          {prompt}
         </CardDescription>
+        <CardContent>
+          <Image
+            src={imageUrl}
+            alt={title}
+            width={320}
+            height={180}
+            className="rounded-md"
+          />
+        </CardContent>
       </CardHeader>
       <CardContent>
         <div className="flex space-x-5 text-sm text-muted-foreground">
           <div>
             <Link
               className="flex items-center text-sm transition-colors hover:text-primary"
-              href={url ?? "#"}
+              href={engineUrl ?? "#"}
               target="_blank"
             >
-              {seriesId}
+              {runId}
             </Link>
           </div>
-          <div>{createdAt && format(createdAt, "d MMM yyyy")}</div>
         </div>
       </CardContent>
     </Card>

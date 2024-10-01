@@ -1,6 +1,9 @@
 import { mistralGenerateText, mergeVideos } from "./functions";
 import { lumaaiService } from "@restackio/integrations-lumaai";
 import { azureSpeechService } from "@restackio/integrations-azurespeech";
+import { openaiService } from "@restackio/integrations-openai";
+import { falService } from "@restackio/integrations-fal";
+
 import { client } from "./client";
 
 async function services() {
@@ -9,7 +12,7 @@ async function services() {
     await Promise.all([
       client.startService({
         workflowsPath,
-        functions: { mistralGenerateText, mergeVideos },
+        functions: { mergeVideos },
         options: {
           rateLimit: 1000,
         },
@@ -18,6 +21,8 @@ async function services() {
       azureSpeechService({ client }),
       // Start the luma service
       lumaaiService({ client }),
+      openaiService({ client }),
+      falService({ client }),
       // Start the merge videos service
     ]);
 

@@ -33,5 +33,9 @@ export async function triggerWorkflow(
     runId,
   });
 
-  return result;
+  return {
+    workflowId,
+    runId,
+    output: result,
+  };
 }
