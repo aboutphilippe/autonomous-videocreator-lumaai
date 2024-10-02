@@ -1,4 +1,5 @@
 import { step } from "@restackio/restack-sdk-ts/workflow";
+import * as functions from "../functions";
 import { openaiTaskQueue } from "@restackio/integrations-openai/taskQueue";
 import * as openaiFunctions from "@restackio/integrations-openai/functions";
 import { falTaskQueue } from "@restackio/integrations-fal/taskQueue";
@@ -10,9 +11,17 @@ interface Input {
   title: string;
   prompt: string;
   amount: number;
+  accessToken: string;
+  refreshToken: string;
 }
 
-export async function createSeries({ title, prompt, amount }: Input) {
+export async function createSeries({
+  title,
+  prompt,
+  amount,
+  accessToken,
+  refreshToken,
+}: Input) {
   const previewsSchema = z.object({
     seriesDescription: z.string().describe("The description of the series."),
     previews: z.array(
@@ -61,7 +70,7 @@ export async function createSeries({ title, prompt, amount }: Input) {
       prompt: preview.imagePrompt,
       imageSize: "portrait_16_9",
       numInferenceSteps: 4,
-      enableSafetyChecker: true,
+      enableSafetyChecker: false,
     });
 
     const imagePreview = {
@@ -71,6 +80,24 @@ export async function createSeries({ title, prompt, amount }: Input) {
 
     imagePreviews.push(imagePreview);
   }
+
+  // if (accessToken && refreshToken) {
+  //   const youtubePlaylist = await step<typeof functions>({
+  //     taskQueue: "youtube",
+  //   }).youtubeCreatePlaylist({
+  //     title,
+  //     description: prompt,
+  //     accessToken,
+  //     refreshToken,
+  //   });
+
+  //   return {
+  //     title,
+  //     prompt,
+  //     imagePreviews,
+  //     youtubePlaylist,
+  //   };
+  // }
 
   return {
     title,

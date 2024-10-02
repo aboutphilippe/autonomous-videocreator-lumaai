@@ -11,14 +11,22 @@ interface Input {
   title: string;
   prompt: string;
   fromImageUrl?: string;
-  sessionAccessToken?: string;
+  playlistId?: string;
+  seriesId?: string;
+  uploadToYoutube?: boolean;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 export async function createVideo({
   title,
   prompt,
   fromImageUrl,
-  sessionAccessToken,
+  playlistId,
+  seriesId,
+  uploadToYoutube,
+  accessToken,
+  refreshToken,
 }: Input) {
   const resultPromptVideo = await step<typeof openaiFunctions>({
     taskQueue: openaiTaskQueue,
@@ -67,11 +75,13 @@ export async function createVideo({
   let lastVideoUrl: string | undefined;
   let previousGenerationId: string | undefined;
 
-  const { publicUrl } = await step<typeof functions>({}).uploadImageToBucket({
+  const { publicUrl } = await step<typeof functions>({
+    taskQueue: "gcp",
+  }).uploadImageToBucket({
     imageUrl: fromImageUrl!,
   });
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 4; i++) {
     const { generation: queuedGeneration } = await step<typeof lumaaiFunctions>(
       {
         taskQueue: lumaaiTaskQueue,
@@ -82,6 +92,7 @@ export async function createVideo({
       aspectRatio: "9:16",
       extendGenerationId: previousGenerationId,
       fromImageUrl: previousGenerationId ? undefined : publicUrl,
+      loop: true,
     });
 
     log.info(`queuedGeneration ${i + 1}`, { queuedGeneration });
@@ -111,26 +122,54 @@ export async function createVideo({
       audioBase64: audio.payload,
     });
 
-    if (sessionAccessToken) {
-      const youtubeVideo = await step<typeof functions>({}).youtubeUpload({
+    const { publicUrl: videoUrl } = await step<typeof functions>({
+      taskQueue: "gcp",
+    }).uploadVideoToBucket({
+      outputPath,
+    });
+
+    if (uploadToYoutube && accessToken && refreshToken) {
+      const youtubeVideo = await step<typeof functions>({
+        taskQueue: "youtube-upload",
+      }).youtubeUpload({
         title,
-        description: videoPrompt,
+        description: audioPrompt,
         filePath: outputPath,
-        sessionAccessToken,
+        accessToken,
+        refreshToken,
       });
 
+      if (playlistId) {
+        await step<typeof functions>({
+          taskQueue: "youtube",
+        }).youtubeAddVideoToPlaylist({
+          videoId: youtubeVideo.videoId,
+          playlistId,
+          accessToken,
+          refreshToken,
+        });
+      }
+
       return {
+        seriesId,
+        playlistId,
+        title,
+        description: audioPrompt,
+        thumbnailUrl: fromImageUrl,
+        videoUrl: videoUrl,
+        status: "PUBLISHED",
         youtubeVideo,
-        outputPath,
-        audio,
-        videos: [lastVideoUrl],
       };
     }
 
     return {
-      outputPath,
-      audio,
-      videos: [lastVideoUrl],
+      seriesId,
+      playlistId,
+      title,
+      description: audioPrompt,
+      thumbnailUrl: fromImageUrl,
+      status: "DRAFT",
+      videoUrl: videoUrl,
     };
   }
 }

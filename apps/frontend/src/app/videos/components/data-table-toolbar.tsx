@@ -7,7 +7,7 @@ import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { DataTableViewOptions } from "@/app/videos/components/data-table-view-options";
 
-import { sources, labels, priorities, statuses } from "./filtersData";
+import { series, statuses } from "./filtersData";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableToolbarProps<TData> {
@@ -18,8 +18,7 @@ export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-
-  const filterSources = sources();
+  const filterSeries = series();
 
   return (
     <div className="flex items-center justify-between">
@@ -32,13 +31,13 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("source") &&
-          filterSources &&
-          filterSources.length > 0 && (
+        {table.getColumn("seriesId") &&
+          filterSeries &&
+          filterSeries.length > 0 && (
             <DataTableFacetedFilter
-              column={table.getColumn("source")}
-              title="Source"
-              options={filterSources}
+              column={table.getColumn("seriesId")}
+              title="Series"
+              options={filterSeries}
             />
           )}
         {table.getColumn("status") && (
@@ -48,21 +47,6 @@ export function DataTableToolbar<TData>({
             options={statuses}
           />
         )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
-          />
-        )}
-        {table.getColumn("labels") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("labels")}
-            title="Label"
-            options={labels}
-          />
-        )}
-
         {isFiltered && (
           <Button
             variant="ghost"

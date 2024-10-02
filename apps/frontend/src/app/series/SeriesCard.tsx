@@ -26,7 +26,7 @@ export function SeriesCard({
   enabled?: boolean;
 }) {
   const { workflowId, runId, output } = series;
-  const { title, prompt, imagePreviews } = output;
+  const { title, prompt, imagePreviews, playlistId } = output;
 
   console.log("imagePreviews", imagePreviews);
   const imageUrl = imagePreviews[0].images[0].url;
@@ -39,6 +39,7 @@ export function SeriesCard({
         title: imagePreview.title,
         prompt: imagePreview.imagePrompt,
         fromImageUrl: imagePreview.images[0].url,
+        uploadToYoutube: false,
       })
     );
 
@@ -46,8 +47,20 @@ export function SeriesCard({
     console.log("workflowResults", workflowResults);
   };
 
+  const handleDelete = () => {
+    const storedSeries = JSON.parse(localStorage.getItem("series") || "[]");
+    const updatedSeries = storedSeries.filter(
+      (item: SeriesType) =>
+        item.workflowId !== series.workflowId || item.runId !== series.runId
+    );
+    localStorage.setItem("series", JSON.stringify(updatedSeries));
+    console.log(
+      `Deleted series with workflowId: ${series.workflowId} and runId: ${series.runId}`
+    );
+  };
+
   return (
-    <Card>
+    <Card key={series.runId}>
       <CardHeader className="space-y-5">
         <div className="flex justify-between items-center">
           <CardTitle className={!enabled ? "opacity-50" : ""}>
@@ -72,35 +85,23 @@ export function SeriesCard({
               <DropdownMenuItem onClick={() => {}}>
                 {enabled ? "Disable" : "Enable"}
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <CardDescription className="line-clamp-2 pr-10 h-10">
-          {prompt}
-        </CardDescription>
         <CardContent>
           <Image
             src={imageUrl}
             alt={title}
-            width={320}
-            height={180}
+            width={160}
+            height={90}
             className="rounded-md"
           />
         </CardContent>
+        <CardDescription className="line-clamp-3 hover:line-clamp-none pr-10 h-10">
+          {prompt}
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex space-x-5 text-sm text-muted-foreground">
-          <div>
-            <Link
-              className="flex items-center text-sm transition-colors hover:text-primary"
-              href={engineUrl ?? "#"}
-              target="_blank"
-            >
-              {runId}
-            </Link>
-          </div>
-        </div>
-      </CardContent>
     </Card>
   );
 }

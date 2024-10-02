@@ -1,18 +1,21 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-
 import { Checkbox } from "@/app/components/ui/checkbox";
-
-import { priorities, statuses } from "./components/filtersData";
-import { Message } from "./schema";
+import { statuses } from "./components/filtersData";
 import { DataTableColumnHeader } from "./components/data-table-column-header";
 import { DataTableRowActions } from "./components/data-table-row-actions";
 import Image from "next/image";
-import { SparklesIcon } from "lucide-react";
 import { format } from "date-fns";
-import { LabelColor } from "@/app/components/ui/label";
-export const columns: ColumnDef<Message>[] = [
+import { VideoType } from "@/app/providers/LocalStorage";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/app/components/ui/dialog"; // Assuming you have a Modal component
+
+export const columns: ColumnDef<VideoType>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -40,15 +43,41 @@ export const columns: ColumnDef<Message>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "key",
+    accessorKey: "runId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Id" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("key")}</div>,
+    cell: ({ row }) => {
+      const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+      return (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Image
+              src={row.original.thumbnailUrl}
+              alt="Thumbnail"
+              width={160}
+              height={90}
+              className="rounded-md cursor-pointer"
+            />
+          </DialogTrigger>
+          <DialogContent className="max-w-md">
+            <div>
+              <video
+                width="640"
+                height="360"
+                controls
+                autoPlay
+                src={row.original.videoUrl}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
-
   {
     accessorKey: "title",
     header: ({ column }) => (
@@ -58,18 +87,17 @@ export const columns: ColumnDef<Message>[] = [
       return (
         <div className="space-y-1">
           <p className="line-clamp-1">{row.original.title}</p>
-          {/* <p className="flex text-sm text-blue-500 items-center">
-            <SparklesIcon className="h-4 w-4 mr-1" aria-hidden="true" />{" "}
-            <span className="line-clamp-1 ">{row.original.summary}</span>
-          </p> */}
+          <p className="flex text-sm text-neutral-500 items-center">
+            <span className="line-clamp-2">{row.original.description}</span>
+          </p>
         </div>
       );
     },
   },
   {
-    accessorKey: "source",
+    accessorKey: "seriesId",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Source" />
+      <DataTableColumnHeader column={column} title="Series" />
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -101,81 +129,41 @@ export const columns: ColumnDef<Message>[] = [
       return value.includes(row.getValue(id));
     },
   },
-  // {
-  //   accessorKey: "labels",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Labels" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <div className="flex items-center gap-2 truncate max-w-40">
-  //         {row.original.labels.map((label, index) => (
-  //           <div key={index}>
-  //             <LabelColor name={label.name ?? ""} color={label.color ?? ""} />
-  //           </div>
-  //         ))}
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
-  // {
-  //   accessorKey: "priority",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Priority" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const priority = priorities.find(
-  //       (priority) => priority.value === row.getValue("priority")
-  //     );
-
-  //     if (!priority) {
-  //       return null;
-  //     }
-
-  //     return (
-  //       <div className="flex items-center">
-  //         {priority.icon && (
-  //           <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-  //         )}
-  //         <span>{priority.label}</span>
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
-  // {
-  //   accessorKey: "author.handle",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Author" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <div style={{ display: "flex", alignItems: "center" }}>
-  //         <Image
-  //           src={row.original.author.imageUrl ?? ""}
-  //           alt={row.original.author.handle}
-  //           width={20}
-  //           height={20}
-  //           className="h-5 w-5 rounded-full mr-2"
-  //         />
-  //         {row.original.author.handle}
-  //       </div>
-  //     );
-  //   },
-  // },
   {
-    accessorKey: "createdAt",
+    accessorKey: "youtubeVideo.views",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Created" />
+      <DataTableColumnHeader column={column} title="Views" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[90px]">{row.original.youtubeVideo?.views}</div>
+    ),
+  },
+  {
+    accessorKey: "youtubeVideo.likes",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Likes" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[90px]">{row.original.youtubeVideo?.views}</div>
+    ),
+  },
+  {
+    accessorKey: "youtubeVideo.comments",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Comments" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-[90px]">{row.original.youtubeVideo?.views}</div>
+    ),
+  },
+  {
+    accessorKey: "youtubeVideo.uploadedAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Uploaded At" />
     ),
     cell: ({ row }) => (
       <div className="w-[90px]">
-        {format(row.getValue("createdAt"), "d MMM yyyy")}
+        {format(row.original.youtubeVideo?.uploadedAt, "d MMM yyyy")}
       </div>
     ),
   },

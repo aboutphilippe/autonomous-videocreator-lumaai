@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { triggerWorkflow } from "../actions/trigger";
 import { Textarea } from "../components/ui/textarea";
+import { LocalStorageContext } from "../providers/LocalStorage";
+import { demoVideos } from "../providers/demoData";
 
 interface SeriesFormProps {
   onClose: () => void;
@@ -23,9 +25,15 @@ type ImagePreview = {
 export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
   const [title, setTitle] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [amount, setAmount] = useState(6);
+  const [amount, setAmount] = useState(3);
+  const [seriesId, setSeriesId] = useState("");
   const [imagePreviews, setImagePreviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [creatingVideos, setCreatingVideos] = useState(false);
+  const { videos, setVideos } = useContext(LocalStorageContext) || {
+    videos: demoVideos,
+    setVideos: () => {},
+  };
 
   const handleGenerateSeries = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,8 +45,39 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
     });
     console.log("workflowResult", workflowResult);
     setImagePreviews(workflowResult.output.imagePreviews);
+    setSeriesId(workflowResult.runId);
     onSuccess(workflowResult);
     setLoading(false);
+  };
+
+  const handleCreateVideos = async () => {
+    setCreatingVideos(true);
+    const workflowPromises = imagePreviews.map((imagePreview) =>
+      triggerWorkflow("createVideo", {
+        seriesId: seriesId,
+        title: imagePreview.title,
+        prompt: imagePreview.imagePrompt,
+        fromImageUrl: imagePreview.images[0].url,
+        uploadToYoutube: false,
+      })
+    );
+
+    const workflowResults = await Promise.all(workflowPromises);
+    const transformedResults = workflowResults.map((result) => ({
+      workflowId: result.workflowId,
+      runId: result.runId,
+      seriesId: seriesId,
+      title: result.output.title,
+      description: result.output.description,
+      playlistId: result.output.playlistId,
+      thumbnailUrl: result.output.thumbnailUrl,
+      videoUrl: result.output.videoUrl,
+      status: result.output.status,
+      youtubeVideo: result.output.youtubeVideo,
+    }));
+
+    setVideos([...videos, ...transformedResults]);
+    setCreatingVideos(false);
   };
 
   return (
@@ -65,13 +104,13 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
             />
           </div>
           <div>
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="amount">Previews amount</Label>
             <Input
               id="amount"
               type="number"
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value))}
-              placeholder="6"
+              placeholder="3"
             />
           </div>
         </div>
@@ -79,37 +118,48 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
           <Button variant="secondary" type="button" onClick={onClose}>
             Close
           </Button>
-          <Button type="submit" disabled={loading || imagePreviews.length > 0}>
-            {loading ? "Generating..." : "Generate"}
+          <Button type="submit" disabled={loading}>
+            {loading
+              ? "Generating..."
+              : `Generate ${imagePreviews.length > 0 ? "again" : ""}`}
+          </Button>
+          <Button
+            type="button"
+            onClick={handleCreateVideos}
+            disabled={loading || creatingVideos || imagePreviews.length === 0}
+          >
+            {creatingVideos ? "Creating videos..." : "Create videos"}
           </Button>
         </div>
       </form>
       <div className="w-2/3 p-4">
         <div>
-          {!!loading && (
-            <div className="space-y-5">
-              <h2>Previews</h2>
-              <p className="text-center text-gray-500">Loading...</p>
-            </div>
-          )}
-          {imagePreviews.length > 0 && (
-            <div className="space-y-5">
-              <h2>Previews</h2>
+          <div className="space-y-5">
+            <h2>Previews</h2>
+            {imagePreviews.length == 0 && (
+              <p className="text-center text-gray-500">
+                Generate to see thumbnail previews.
+              </p>
+            )}
+            {imagePreviews.length > 0 && (
               <div className="grid grid-cols-3 gap-4">
                 {imagePreviews.map((preview, index) => (
                   <div key={index} className="space-y-2">
                     <h3>{preview.title}</h3>
                     {preview.images.map(
-                      (image: ImagePreview, imgIndex: number) => (
-                        <img
-                          key={imgIndex}
-                          src={image.url}
-                          alt={preview.title}
-                          width={image.width}
-                          height={image.height}
-                          className="rounded-md"
-                        />
-                      )
+                      (image: ImagePreview, imgIndex: number) =>
+                        loading ? (
+                          <>Loading...</>
+                        ) : (
+                          <img
+                            key={imgIndex}
+                            src={image.url}
+                            alt={preview.title}
+                            width={image.width}
+                            height={image.height}
+                            className="rounded-md"
+                          />
+                        )
                     )}
                     <p className="text-sm text-gray-500 line-clamp-2 hover:line-clamp-none">
                       {preview.imagePrompt}
@@ -117,8 +167,8 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
                   </div>
                 ))}
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

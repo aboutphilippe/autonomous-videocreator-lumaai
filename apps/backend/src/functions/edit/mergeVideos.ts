@@ -42,6 +42,7 @@ export async function mergeVideos(input: Input): Promise<Output> {
       .input(audioPath)
       .outputOptions("-c:v copy") // Copy the video codec
       .outputOptions("-c:a aac") // Ensure audio is in AAC format
+      .outputOptions("-shortest")
       .output(outputPath)
       .on("start", (commandLine) => {
         console.log("Spawned Ffmpeg with command: " + commandLine);

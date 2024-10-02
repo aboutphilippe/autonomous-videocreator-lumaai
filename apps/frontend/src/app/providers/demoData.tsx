@@ -89,3 +89,32 @@ export const demoSeries = [
     },
   },
 ];
+
+export const demoVideos = [
+  {
+    workflowId: "1727873386992-createVideo",
+    runId: "86b9426a-449a-45cf-ab1e-0d66a0f47bb6",
+    seriesId: "7a99d5a7-86ca-499d-b2fb-9ebcc6a0b88e",
+    playlistId: "PL1234567890",
+    title: "LEGO Harry Potter in Diagon Alley",
+    description:
+      "A cheerful LEGO Harry Potter minifigure running towards the camera in front of Hagridâs hut, surrounded by lush greenery, with Fang the boarhound sitting nearby.",
+    thumbnailUrl:
+      "https://storage.googleapis.com/avp-bucket/public/9cc2afe8-930f-44e3-9f83-06bdcf9d3635.jpg",
+    videoUrl:
+      "https://storage.cdn-luma.com/lit_lite_inference_v1.6-xl/796e8554-5a21-40f1-8434-18338dbd13be/4de15991-c96f-4988-b550-c0ac3b4af7cf_video0512cac773ca04ff4ab4209c2e98cf94d.mp4",
+    status: "PUBLISHED",
+    youtubeVideo: {
+      videoId: "sLsEGaOIlDw",
+      title: "LEGO Harry Potter in Diagon Alley",
+      description:
+        "LEGO Harry Potter minifigure with round glasses and a lightning bolt scar, running towards the camera in a vibrant Diagon Alley, filled with colorful shops, wizarding goods, and magical creatures.",
+      thumbnailUrl:
+        "https://storage.googleapis.com/avp-bucket/public/9cc2afe8-930f-44e3-9f83-06bdcf9d3635.jpg",
+      views: 0,
+      likes: 0,
+      comments: 0,
+      uploadedAt: new Date(),
+    },
+  },
+];

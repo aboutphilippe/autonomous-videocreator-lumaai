@@ -1,12 +1,14 @@
 import fs from "fs";
 import readline from "readline";
 import { google } from "googleapis";
+import { getAuthClient } from "./auth";
 
 interface Input {
   title: string;
   description: string;
   filePath: string;
-  sessionAccessToken: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 interface Output {
@@ -17,18 +19,13 @@ export async function youtubeUpload({
   title,
   description,
   filePath,
-  sessionAccessToken,
+  accessToken,
+  refreshToken,
 }: Input): Promise<Output> {
   const fileSize = fs.statSync(filePath).size;
 
-  const auth = new google.auth.OAuth2({
-    clientId: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  });
+  const auth = getAuthClient(accessToken, refreshToken);
 
-  auth.setCredentials({
-    access_token: sessionAccessToken,
-  });
   const youtube = google.youtube({
     version: "v3",
     auth,
@@ -44,7 +41,11 @@ export async function youtubeUpload({
           description,
         },
         status: {
+          embeddable: true,
           privacyStatus: "private",
+          madeForKids: true,
+          selfDeclaredMadeForKids: true,
+          publicStatsViewable: true,
         },
       },
       media: {
@@ -61,8 +62,7 @@ export async function youtubeUpload({
     }
   );
 
-  console.log("\n\n");
-  console.log(res.data);
+  const videoId = res.data.id!;
 
-  return { videoId: res.data.id! };
+  return { videoId };
 }

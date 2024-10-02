@@ -1,6 +1,7 @@
 "use server";
 import Restack from "@restackio/restack-sdk-ts";
 import { Example } from "../components/examplesList";
+import { auth } from "../auth";
 
 const connectionOptions = {
   engineId: process.env.RESTACK_ENGINE_ID!,
@@ -22,10 +23,20 @@ export async function triggerWorkflow(
 
   const workflowId = `${Date.now()}-${workflowName.toString()}`;
 
+  const session = await auth();
+  //@ts-ignore
+  const accessToken = session?.accessToken;
+  //@ts-ignore
+  const refreshToken = session?.refreshToken;
+
   const runId = await client.scheduleWorkflow({
     workflowName: workflowName as string,
     workflowId,
-    input,
+    input: {
+      ...input,
+      accessToken,
+      refreshToken,
+    },
   });
 
   const result = await client.getWorkflowResult({

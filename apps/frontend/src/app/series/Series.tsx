@@ -24,6 +24,7 @@ export type SeriesType = {
       imagePrompt: string;
       images: { url: string }[];
     }[];
+    playlistId?: string;
   };
 };
 
@@ -38,8 +39,6 @@ export default function Series() {
   const handleSuccess = async (newSeries: any) => {
     setSeries([...series, newSeries]);
   };
-
-  console.log("series", series);
 
   return (
     <>
@@ -62,7 +61,7 @@ export default function Series() {
       </div>
       <Separator />
       <div className="p-4">
-        <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-3 xl:grid-cols-4">
+        <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-3 xl:grid-cols-6">
           {series.map((series) => (
             <SeriesCard series={series} />
           ))}
