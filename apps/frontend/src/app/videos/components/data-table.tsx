@@ -32,6 +32,7 @@ import { ScrollArea } from "@/app/components/ui/scroll-area";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  filterSeries?: { label: string; value: string }[];
   onRowClick?: (row: any) => void;
   selectedRowId?: string;
   minimal?: boolean;
@@ -40,6 +41,7 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterSeries,
   onRowClick,
   selectedRowId,
   minimal,
@@ -82,7 +84,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      {!minimal && <DataTableToolbar table={table} />}
+      {!minimal && (
+        <DataTableToolbar table={table} filterSeries={filterSeries} />
+      )}
       <ScrollArea className="relative h-[calc(100vh-12rem)] overflow-auto rounded-md border">
         <Table>
           <TableHeader>

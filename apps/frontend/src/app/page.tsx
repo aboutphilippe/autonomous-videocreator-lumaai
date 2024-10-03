@@ -1,10 +1,18 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import SignIn from "./components/sign-in";
-import Series from "./series/Series";
-import Videos from "./videos/page";
-import { ThemeToggle } from "./components/theme-toggle";
+"use server";
 
-export default function Home() {
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
+import Series from "./series/page";
+import Videos from "./videos/page";
+import { getUser } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
+import { UserNav } from "./components/user-nav";
+
+export default async function Home() {
+  const { user } = await getUser();
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
     <div>
       <main className="py-4">
@@ -25,8 +33,7 @@ export default function Home() {
               </TabsTrigger>
             </TabsList>
             <div className="flex items-center gap-2">
-              <ThemeToggle />
-              <SignIn />
+              <UserNav user={user} />
             </div>
           </div>
           <TabsContent value="series" className="m-0">

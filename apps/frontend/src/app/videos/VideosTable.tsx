@@ -2,21 +2,24 @@
 
 import { columns } from "./columns";
 import { DataTable } from "./components/data-table";
-import { useContext } from "react";
 import { Separator } from "@/app/components/ui/separator";
-import { LocalStorageContext } from "../providers/LocalStorage";
-import { demoVideos } from "../providers/demoData";
 
-export default function VideosTable() {
-  const { videos } = useContext(LocalStorageContext) || {
-    videos: demoVideos,
-  };
+import { VideoType } from "./page";
 
-  const allVideos = [...demoVideos, ...videos];
-
+export default function VideosTable({
+  videos,
+  filterSeries,
+}: {
+  videos?: VideoType[];
+  filterSeries?: { label: string; value: string }[];
+}) {
   const dataTable =
-    allVideos.map((video) => ({
+    videos?.map((video) => ({
       ...video,
+      series_id: video.series_id
+        ? filterSeries?.find((series) => series.value === video.series_id)
+            ?.label
+        : null,
     })) ?? [];
 
   return (
@@ -28,6 +31,7 @@ export default function VideosTable() {
       <div className="p-4">
         <DataTable
           data={dataTable}
+          filterSeries={filterSeries}
           //@ts-ignore
           columns={columns}
         />

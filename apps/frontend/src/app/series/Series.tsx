@@ -10,35 +10,12 @@ import {
   DialogContent,
 } from "@/app/components/ui/dialog";
 import { Button } from "@/app/components/ui/button";
-import { LocalStorageContext } from "../providers/LocalStorage";
-import { demoSeries } from "../providers/demoData";
+import { SerieType } from "./page";
 
-export type SeriesType = {
-  workflowId: string;
-  runId: string;
-  output: {
-    title: string;
-    prompt: string;
-    imagePreviews: {
-      title: string;
-      imagePrompt: string;
-      images: { url: string }[];
-    }[];
-    playlistId?: string;
-  };
-};
-
-export default function Series() {
+export default function SeriesList({ series }: { series?: SerieType[] }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { series, setSeries } = useContext(LocalStorageContext) || {
-    series: demoSeries,
-    setSeries: () => {},
-  };
 
   const handleClose = () => setIsDialogOpen(false);
-  const handleSuccess = async (newSeries: any) => {
-    setSeries([...series, newSeries]);
-  };
 
   return (
     <>
@@ -55,16 +32,14 @@ export default function Series() {
             </Button>
           </DialogTrigger>
           <DialogContent>
-            <SeriesForm onClose={handleClose} onSuccess={handleSuccess} />
+            <SeriesForm onClose={handleClose} />
           </DialogContent>
         </Dialog>
       </div>
       <Separator />
       <div className="p-4">
         <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-3 xl:grid-cols-6">
-          {series.map((series) => (
-            <SeriesCard series={series} />
-          ))}
+          {series && series.map((series) => <SeriesCard series={series} />)}
         </div>
       </div>
     </>

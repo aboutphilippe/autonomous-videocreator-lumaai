@@ -2,7 +2,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/app/lib/utils";
 import { ThemeProvider } from "@/app/providers/theme";
-import { LocalStorageProvider } from "@/app/providers/LocalStorage";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +24,7 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <LocalStorageProvider>{children}</LocalStorageProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>

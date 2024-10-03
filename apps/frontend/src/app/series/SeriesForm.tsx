@@ -1,18 +1,15 @@
 "use client";
 
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { triggerWorkflow } from "../actions/trigger";
 import { Textarea } from "../components/ui/textarea";
-import { LocalStorageContext } from "../providers/LocalStorage";
-import { demoVideos } from "../providers/demoData";
 
 interface SeriesFormProps {
   onClose: () => void;
-  onSuccess: (newSeries: any) => void;
 }
 
 type ImagePreview = {
@@ -22,62 +19,41 @@ type ImagePreview = {
   content_type: string;
 };
 
-export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
+export function SeriesForm({ onClose }: SeriesFormProps) {
   const [title, setTitle] = useState("");
   const [prompt, setPrompt] = useState("");
   const [amount, setAmount] = useState(3);
-  const [seriesId, setSeriesId] = useState("");
+  const [serieId, setSerieId] = useState("");
   const [imagePreviews, setImagePreviews] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [creatingVideos, setCreatingVideos] = useState(false);
-  const { videos, setVideos } = useContext(LocalStorageContext) || {
-    videos: demoVideos,
-    setVideos: () => {},
-  };
+  const [launching, setLaunching] = useState(false);
 
   const handleGenerateSeries = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    const workflowResult = await triggerWorkflow("createSeries", {
+    const workflowResult = await triggerWorkflow("generateSerie", {
+      ...(serieId && { serieId }),
       title,
       prompt,
       amount,
     });
     console.log("workflowResult", workflowResult);
     setImagePreviews(workflowResult.output.imagePreviews);
-    setSeriesId(workflowResult.runId);
-    onSuccess(workflowResult);
+    setSerieId(workflowResult.output.upsertedSerie.id);
     setLoading(false);
   };
 
-  const handleCreateVideos = async () => {
-    setCreatingVideos(true);
-    const workflowPromises = imagePreviews.map((imagePreview) =>
-      triggerWorkflow("createVideo", {
-        seriesId: seriesId,
-        title: imagePreview.title,
-        prompt: imagePreview.imagePrompt,
-        fromImageUrl: imagePreview.images[0].url,
-        uploadToYoutube: false,
-      })
-    );
-
-    const workflowResults = await Promise.all(workflowPromises);
-    const transformedResults = workflowResults.map((result) => ({
-      workflowId: result.workflowId,
-      runId: result.runId,
-      seriesId: seriesId,
-      title: result.output.title,
-      description: result.output.description,
-      playlistId: result.output.playlistId,
-      thumbnailUrl: result.output.thumbnailUrl,
-      videoUrl: result.output.videoUrl,
-      status: result.output.status,
-      youtubeVideo: result.output.youtubeVideo,
-    }));
-
-    setVideos([...videos, ...transformedResults]);
-    setCreatingVideos(false);
+  const handleLaunching = async () => {
+    if (serieId) {
+      setLaunching(true);
+      const workflowResult = await triggerWorkflow("launchSerie", {
+        serieId,
+        createPlaylist: false,
+      });
+      console.log("workflowResult", workflowResult);
+      setLaunching(false);
+      onClose();
+    }
   };
 
   return (
@@ -125,10 +101,12 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
           </Button>
           <Button
             type="button"
-            onClick={handleCreateVideos}
-            disabled={loading || creatingVideos || imagePreviews.length === 0}
+            onClick={() => {
+              handleLaunching();
+            }}
+            disabled={loading || launching || imagePreviews.length === 0}
           >
-            {creatingVideos ? "Creating videos..." : "Create videos"}
+            {launching ? "Launching..." : "Launch"}
           </Button>
         </div>
       </form>
@@ -137,8 +115,9 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
           <div className="space-y-5">
             <h2>Previews</h2>
             {imagePreviews.length == 0 && (
-              <p className="text-center text-gray-500">
-                Generate to see thumbnail previews.
+              <p className="text-center text-neutral-500">
+                {loading ? "Generating " : "Generate to see "}thumbnail
+                previews.
               </p>
             )}
             {imagePreviews.length > 0 && (
@@ -147,21 +126,18 @@ export function SeriesForm({ onClose, onSuccess }: SeriesFormProps) {
                   <div key={index} className="space-y-2">
                     <h3>{preview.title}</h3>
                     {preview.images.map(
-                      (image: ImagePreview, imgIndex: number) =>
-                        loading ? (
-                          <>Loading...</>
-                        ) : (
-                          <img
-                            key={imgIndex}
-                            src={image.url}
-                            alt={preview.title}
-                            width={image.width}
-                            height={image.height}
-                            className="rounded-md"
-                          />
-                        )
+                      (image: ImagePreview, imgIndex: number) => (
+                        <img
+                          key={imgIndex}
+                          src={image.url}
+                          alt={preview.title}
+                          width={image.width}
+                          height={image.height}
+                          className="rounded-md"
+                        />
+                      )
                     )}
-                    <p className="text-sm text-gray-500 line-clamp-2 hover:line-clamp-none">
+                    <p className="text-sm text-neutral-500 line-clamp-2 hover:line-clamp-none">
                       {preview.imagePrompt}
                     </p>
                   </div>

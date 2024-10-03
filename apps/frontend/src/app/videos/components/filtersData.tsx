@@ -1,8 +1,5 @@
 "use client";
 
-import { demoSeries } from "@/app/providers/demoData";
-import { LocalStorageContext } from "@/app/providers/LocalStorage";
-import { SeriesType } from "@/app/series/Series";
 import {
   CheckCircledIcon,
   CircleIcon,
@@ -10,7 +7,6 @@ import {
   ExclamationTriangleIcon,
   StopwatchIcon,
 } from "@radix-ui/react-icons";
-import { useContext } from "react";
 
 export const statuses = [
   {
@@ -39,15 +35,3 @@ export const statuses = [
     icon: ExclamationTriangleIcon,
   },
 ];
-
-export function series() {
-  const { series } = useContext(LocalStorageContext) || {
-    series: demoSeries,
-  };
-
-  const filterSeries = series?.map((serie: SeriesType) => ({
-    label: serie.output.title,
-    value: serie.runId,
-  }));
-  return filterSeries;
-}

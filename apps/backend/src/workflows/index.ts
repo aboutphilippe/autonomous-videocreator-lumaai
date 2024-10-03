@@ -1,2 +1,4 @@
 export * from "./createVideo";
-export * from "./createSeries";
+export * from "./generateSerie";
+export * from "./updateToken";
+export * from "./launchSerie";

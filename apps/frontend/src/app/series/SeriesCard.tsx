@@ -12,34 +12,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
-import Link from "next/link";
 import { MoreVertical } from "lucide-react";
 import Image from "next/image";
 import { triggerWorkflow } from "../actions/trigger";
-import { SeriesType } from "./Series";
+import { SerieType } from "./page";
 
 export function SeriesCard({
   series,
   enabled,
 }: {
-  series: SeriesType;
+  series: SerieType;
   enabled?: boolean;
 }) {
-  const { workflowId, runId, output } = series;
-  const { title, prompt, imagePreviews, playlistId } = output;
+  const { title, prompt, images } = series;
 
-  console.log("imagePreviews", imagePreviews);
-  const imageUrl = imagePreviews[0].images[0].url;
-
-  const engineUrl = `http://localhost:5233/?workflowId=${workflowId}&runId=${runId}`;
+  console.log("images", images);
+  const imageUrl = images[0].url;
 
   const handleCreateVideos = async (event: React.FormEvent) => {
-    const workflowPromises = imagePreviews.map((imagePreview) =>
+    const workflowPromises = images.map((image) =>
       triggerWorkflow("createVideo", {
-        title: imagePreview.title,
-        prompt: imagePreview.imagePrompt,
-        fromImageUrl: imagePreview.images[0].url,
+        title: image.title,
+        prompt: image.prompt,
+        fromImageUrl: image.url,
         uploadToYoutube: false,
+        seriesId: series.id,
       })
     );
 
@@ -48,19 +45,11 @@ export function SeriesCard({
   };
 
   const handleDelete = () => {
-    const storedSeries = JSON.parse(localStorage.getItem("series") || "[]");
-    const updatedSeries = storedSeries.filter(
-      (item: SeriesType) =>
-        item.workflowId !== series.workflowId || item.runId !== series.runId
-    );
-    localStorage.setItem("series", JSON.stringify(updatedSeries));
-    console.log(
-      `Deleted series with workflowId: ${series.workflowId} and runId: ${series.runId}`
-    );
+    // todo
   };
 
   return (
-    <Card key={series.runId}>
+    <Card key={series.id}>
       <CardHeader className="space-y-5">
         <div className="flex justify-between items-center">
           <CardTitle className={!enabled ? "opacity-50" : ""}>
@@ -74,11 +63,6 @@ export function SeriesCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Link href={engineUrl} target="_blank">
-                  Open in Engine
-                </Link>
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={handleCreateVideos}>
                 Start creating videos
               </DropdownMenuItem>

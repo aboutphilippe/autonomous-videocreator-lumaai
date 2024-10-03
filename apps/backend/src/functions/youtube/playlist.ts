@@ -11,7 +11,7 @@ export async function youtubeAddVideoToPlaylist({
   playlistId: string;
   accessToken: string;
   refreshToken: string;
-}): Promise<void> {
+}) {
   const auth = getAuthClient(accessToken, refreshToken);
 
   const youtube = google.youtube({
@@ -19,7 +19,7 @@ export async function youtubeAddVideoToPlaylist({
     auth,
   });
 
-  await youtube.playlistItems.insert({
+  const playlistItem = await youtube.playlistItems.insert({
     part: ["snippet"],
     requestBody: {
       snippet: {
@@ -32,7 +32,7 @@ export async function youtubeAddVideoToPlaylist({
     },
   });
 
-  console.log(`Video ${videoId} added to playlist ${playlistId}`);
+  return playlistItem;
 }
 
 export async function youtubeCreatePlaylist({
@@ -67,6 +67,5 @@ export async function youtubeCreatePlaylist({
   });
 
   const playlistId = res.data.id!;
-  console.log(`Playlist ${title} created with ID ${playlistId}`);
   return playlistId;
 }

@@ -12,10 +12,9 @@ interface Input {
   prompt: string;
   fromImageUrl?: string;
   playlistId?: string;
-  seriesId?: string;
+  serieId: string;
   uploadToYoutube?: boolean;
-  accessToken?: string;
-  refreshToken?: string;
+  userId?: string;
 }
 
 export async function createVideo({
@@ -23,10 +22,9 @@ export async function createVideo({
   prompt,
   fromImageUrl,
   playlistId,
-  seriesId,
+  serieId,
   uploadToYoutube,
-  accessToken,
-  refreshToken,
+  userId,
 }: Input) {
   const resultPromptVideo = await step<typeof openaiFunctions>({
     taskQueue: openaiTaskQueue,
@@ -59,6 +57,16 @@ export async function createVideo({
   if (!audioPrompt) {
     throw new Error("No audio prompt");
   }
+
+  await step<typeof functions>({}).supabaseUpsertVideo({
+    video: {
+      series_id: serieId,
+      title: title,
+      description: audioPrompt,
+      status: "NEW",
+      thumbnail_url: fromImageUrl ?? "",
+    },
+  });
 
   const { media: audio } = await step<typeof azureSpeechFunctions>({
     taskQueue: azureSpeechTaskQueue,
@@ -116,7 +124,7 @@ export async function createVideo({
   }
 
   if (lastVideoUrl) {
-    const { outputPath } = await step<typeof functions>({}).mergeVideos({
+    const { outputPath } = await step<typeof functions>({}).mergeMedia({
       videoUrl: lastVideoUrl,
       generationId: previousGenerationId!,
       audioBase64: audio.payload,
@@ -128,7 +136,13 @@ export async function createVideo({
       outputPath,
     });
 
-    if (uploadToYoutube && accessToken && refreshToken) {
+    if (uploadToYoutube && userId) {
+      const { accessToken, refreshToken } = await step<typeof functions>({
+        taskQueue: "supabase",
+      }).supabaseGetProfileTokens({
+        userId,
+      });
+
       const youtubeVideo = await step<typeof functions>({
         taskQueue: "youtube-upload",
       }).youtubeUpload({
@@ -151,7 +165,7 @@ export async function createVideo({
       }
 
       return {
-        seriesId,
+        serieId,
         playlistId,
         title,
         description: audioPrompt,
@@ -163,7 +177,7 @@ export async function createVideo({
     }
 
     return {
-      seriesId,
+      serieId,
       playlistId,
       title,
       description: audioPrompt,

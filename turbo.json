@@ -23,5 +23,11 @@
       ],
       "outputLogs": "errors-only"
     }
-  }
+  },
+  "globalEnv": [
+    "NODE_ENV",
+    "SUPABASE_URL",
+    "SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_KEY"
+  ]
 }

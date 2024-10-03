@@ -38,7 +38,7 @@ const Examples = () => {
         </div>
       ))}
       {output && (
-        <div className="mt-4 p-4 border border-gray-300 rounded bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <div className="mt-4 p-4 border border-neutral-300 rounded bg-neutral-50 dark:bg-neutral-800 dark:border-neutral-700">
           <h4 className="text-lg font-bold">Output:</h4>
           <pre className="text-sm whitespace-pre-wrap">
             {JSON.stringify(output, null, 2)}

@@ -1,4 +1,4 @@
-import { step } from "@restackio/restack-sdk-ts/workflow";
+import { log, step } from "@restackio/restack-sdk-ts/workflow";
 import * as functions from "../functions";
 import { openaiTaskQueue } from "@restackio/integrations-openai/taskQueue";
 import * as openaiFunctions from "@restackio/integrations-openai/functions";
@@ -8,19 +8,19 @@ import { z } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 
 interface Input {
+  userId: string;
   title: string;
   prompt: string;
   amount: number;
-  accessToken: string;
-  refreshToken: string;
+  serieId?: string;
 }
 
-export async function createSeries({
+export async function generateSerie({
+  userId,
   title,
   prompt,
   amount,
-  accessToken,
-  refreshToken,
+  serieId,
 }: Input) {
   const previewsSchema = z.object({
     seriesDescription: z.string().describe("The description of the series."),
@@ -60,48 +60,49 @@ export async function createSeries({
 
   const previews = JSON.parse(seriesResponse) as Previews;
 
-  let imagePreviews = [];
+  const imagePreviews = await Promise.all(
+    previews.previews.map(async (preview) => {
+      const { images } = await step<typeof falFunctions>({
+        taskQueue: falTaskQueue,
+      }).falRun({
+        id: "fal-ai/flux/schnell",
+        prompt: preview.imagePrompt,
+        imageSize: "portrait_16_9",
+        numInferenceSteps: 4,
+        enableSafetyChecker: false,
+      });
 
-  for (const preview of previews.previews) {
-    const { images } = await step<typeof falFunctions>({
-      taskQueue: falTaskQueue,
-    }).falRun({
-      id: "fal-ai/flux/schnell",
-      prompt: preview.imagePrompt,
-      imageSize: "portrait_16_9",
-      numInferenceSteps: 4,
-      enableSafetyChecker: false,
-    });
+      return {
+        ...preview,
+        images: images, // Add images to the new object
+      };
+    })
+  );
 
-    const imagePreview = {
-      ...preview,
-      images: images, // Add images to the new object
-    };
+  log.info("imagePreviews", { imagePreviews });
 
-    imagePreviews.push(imagePreview);
-  }
-
-  // if (accessToken && refreshToken) {
-  //   const youtubePlaylist = await step<typeof functions>({
-  //     taskQueue: "youtube",
-  //   }).youtubeCreatePlaylist({
-  //     title,
-  //     description: prompt,
-  //     accessToken,
-  //     refreshToken,
-  //   });
-
-  //   return {
-  //     title,
-  //     prompt,
-  //     imagePreviews,
-  //     youtubePlaylist,
-  //   };
-  // }
+  const upsertedSerie = await step<typeof functions>({
+    taskQueue: "supabase",
+  }).supabaseUpsertSerie({
+    serie: {
+      ...(serieId && { id: serieId }),
+      title,
+      prompt,
+    },
+    images: imagePreviews.map((imagePreview) => ({
+      title: imagePreview.title,
+      prompt: imagePreview.imagePrompt,
+      url: imagePreview.images[0].url,
+      width: imagePreview.images[0].width,
+      height: imagePreview.images[0].height,
+      content_type: imagePreview.images[0].content_type,
+    })),
+  });
 
   return {
     title,
     prompt,
     imagePreviews,
+    upsertedSerie,
   };
 }

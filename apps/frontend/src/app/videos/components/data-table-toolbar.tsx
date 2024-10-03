@@ -7,18 +7,19 @@ import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { DataTableViewOptions } from "@/app/videos/components/data-table-view-options";
 
-import { series, statuses } from "./filtersData";
+import { statuses } from "./filtersData";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  filterSeries?: { label: string; value: string }[];
 }
 
 export function DataTableToolbar<TData>({
   table,
+  filterSeries,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
-  const filterSeries = series();
 
   return (
     <div className="flex items-center justify-between">
@@ -31,11 +32,11 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("seriesId") &&
+        {table.getColumn("series_id") &&
           filterSeries &&
           filterSeries.length > 0 && (
             <DataTableFacetedFilter
-              column={table.getColumn("seriesId")}
+              column={table.getColumn("series_id")}
               title="Series"
               options={filterSeries}
             />
