@@ -39,7 +39,7 @@ export function SeriesForm({ onClose }: SeriesFormProps) {
     });
     console.log("workflowResult", workflowResult);
     setImagePreviews(workflowResult.output.imagePreviews);
-    setSerieId(workflowResult.output.upsertedSerie.id);
+    setSerieId(workflowResult.output.upsertedSerie.serie[0].id);
     setLoading(false);
   };
 
@@ -53,6 +53,25 @@ export function SeriesForm({ onClose }: SeriesFormProps) {
       console.log("workflowResult", workflowResult);
       setLaunching(false);
       onClose();
+    }
+  };
+
+  const handleVideo = async ({
+    preview,
+    image,
+  }: {
+    preview: any;
+    image: any;
+  }) => {
+    if (serieId) {
+      const workflowResult = await triggerWorkflow("createVideo", {
+        serieId,
+        title: preview.title,
+        prompt: preview.imagePrompt,
+        fromImageUrl: image.url,
+        uploadToYoutube: false,
+      });
+      console.log("workflowResult", workflowResult);
     }
   };
 
@@ -99,15 +118,17 @@ export function SeriesForm({ onClose }: SeriesFormProps) {
               ? "Generating..."
               : `Generate ${imagePreviews.length > 0 ? "again" : ""}`}
           </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              handleLaunching();
-            }}
-            disabled={loading || launching || imagePreviews.length === 0}
-          >
-            {launching ? "Launching..." : "Launch"}
-          </Button>
+          {serieId && (
+            <Button
+              type="button"
+              onClick={() => {
+                handleLaunching();
+              }}
+              disabled={loading || launching || imagePreviews.length === 0}
+            >
+              {launching ? "Launching..." : "Launch"}
+            </Button>
+          )}
         </div>
       </form>
       <div className="w-2/3 p-4">
@@ -121,20 +142,27 @@ export function SeriesForm({ onClose }: SeriesFormProps) {
               </p>
             )}
             {imagePreviews.length > 0 && (
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-4 overflow-y-auto max-h-dvh">
                 {imagePreviews.map((preview, index) => (
-                  <div key={index} className="space-y-2">
-                    <h3>{preview.title}</h3>
+                  <div key={index} className="space-y-2 relative group">
+                    <h3 className="h-20 line-clamp-2">{preview.title}</h3>
                     {preview.images.map(
                       (image: ImagePreview, imgIndex: number) => (
-                        <img
-                          key={imgIndex}
-                          src={image.url}
-                          alt={preview.title}
-                          width={image.width}
-                          height={image.height}
-                          className="rounded-md"
-                        />
+                        <div key={imgIndex} className="relative">
+                          <img
+                            src={image.url}
+                            alt={preview.title}
+                            width={image.width}
+                            height={image.height}
+                            className="rounded-md"
+                          />
+                          <button
+                            onClick={() => handleVideo({ preview, image })}
+                            className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            Create Video
+                          </button>
+                        </div>
                       )
                     )}
                     <p className="text-sm text-neutral-500 line-clamp-2 hover:line-clamp-none">

@@ -1,4 +1,4 @@
-import { FunctionFailure } from "@restackio/restack-sdk-ts/function";
+import { FunctionFailure, log } from "@restackio/restack-sdk-ts/function";
 import { supabaseClient } from "./client";
 
 export async function supabaseUpdateSerie({
@@ -17,9 +17,11 @@ export async function supabaseUpdateSerie({
       status,
       playlist_id: playlistId,
     })
+    .eq("id", serieId)
     .select();
 
   if (error) {
+    log.error("Error updating serie status", error);
     throw FunctionFailure.nonRetryable("Error updating serie status");
   }
 

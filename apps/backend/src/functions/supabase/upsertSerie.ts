@@ -15,36 +15,40 @@ export async function supabaseUpsertSerie({
   serie: SeriesInsert;
   images: ImagesInsert[];
 }) {
-  const supabase = supabaseClient();
+  try {
+    const supabase = supabaseClient();
 
-  // Upsert the series
-  const { data: upsertedSerie, error: serieError } = await supabase
-    .from("series")
-    .upsert(serie)
-    .select();
+    // Upsert the series
+    const { data: upsertedSerie, error: serieError } = await supabase
+      .from("series")
+      .upsert(serie)
+      .select();
 
-  if (serieError) {
-    throw FunctionFailure.nonRetryable("Error upserting series");
+    if (serieError) {
+      throw FunctionFailure.nonRetryable("Error upserting series");
+    }
+
+    const seriesId = upsertedSerie[0].id;
+
+    // Prepare images data with the series_id
+    const imagesWithSeriesId = images.map((image) => ({
+      ...image,
+      series_id: seriesId,
+    }));
+
+    // Upsert the images
+    const { error: imagesError } = await supabase
+      .from("images")
+      .upsert(imagesWithSeriesId);
+
+    if (imagesError) {
+      throw FunctionFailure.nonRetryable("Error upserting image series");
+    }
+
+    return {
+      serie: upsertedSerie,
+    };
+  } catch (error) {
+    throw FunctionFailure.nonRetryable("Error upserting serie");
   }
-
-  const seriesId = upsertedSerie[0].id;
-
-  // Prepare images data with the series_id
-  const imagesWithSeriesId = images.map((image) => ({
-    ...image,
-    series_id: seriesId,
-  }));
-
-  // Upsert the images
-  const { error: imagesError } = await supabase
-    .from("images")
-    .upsert(imagesWithSeriesId);
-
-  if (imagesError) {
-    throw FunctionFailure.nonRetryable("Error upserting image series");
-  }
-
-  return {
-    serie: upsertedSerie,
-  };
 }

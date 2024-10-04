@@ -16,7 +16,7 @@ export default function VideosTable({
   const dataTable =
     videos?.map((video) => ({
       ...video,
-      series_id: video.series_id
+      series_title: video.series_id
         ? filterSeries?.find((series) => series.value === video.series_id)
             ?.label
         : null,

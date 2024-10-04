@@ -113,6 +113,8 @@ export const columns: ColumnDef<VideoType>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Series" />
     ),
+    //@ts-ignore
+    cell: ({ row }) => <div>{row.original.series_title}</div>,
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
@@ -173,6 +175,18 @@ export const columns: ColumnDef<VideoType>[] = [
       <div>
         {row.original.youtube_uploaded_at &&
           format(row.original.youtube_uploaded_at, "d MMM yyyy")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Created" />
+    ),
+    cell: ({ row }) => (
+      <div>
+        {row.original.created_at &&
+          format(row.original.created_at, "d MMM yyyy")}
       </div>
     ),
   },

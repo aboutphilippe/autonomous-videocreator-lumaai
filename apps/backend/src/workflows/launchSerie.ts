@@ -48,7 +48,7 @@ export async function launchSerie({ userId, serieId, createPlaylist }: Input) {
   }
 
   const videos = await Promise.all(
-    serie.images.map(async (image: any) => {
+    serie.images.slice(0, 1).map(async (image: any) => {
       const childWorkflow = await startChild(createVideo, {
         args: [
           {
@@ -65,8 +65,7 @@ export async function launchSerie({ userId, serieId, createPlaylist }: Input) {
       });
 
       return {
-        ...videos,
-        videos: childWorkflow.firstExecutionRunId,
+        runId: childWorkflow.firstExecutionRunId,
       };
     })
   );

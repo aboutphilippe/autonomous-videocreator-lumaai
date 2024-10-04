@@ -13,7 +13,7 @@ CREATE TABLE videos (
     youtube_views INT DEFAULT 0,
     youtube_likes INT DEFAULT 0,
     youtube_comments INT DEFAULT 0,
-    youtube_uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    youtube_uploaded_at TIMESTAMP,
     youtube_playlist_id VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

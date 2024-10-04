@@ -34,7 +34,6 @@ async function services() {
       }),
       client.startService({
         taskQueue: "supabase",
-        workflowsPath,
         functions: {
           supabaseUpsertSerie,
           supabaseUpsertVideo,
@@ -49,37 +48,34 @@ async function services() {
       }),
       client.startService({
         taskQueue: "gcp",
-        workflowsPath,
         functions: { uploadImageToBucket, uploadVideoToBucket },
         options: {
           rateLimit: 100,
         },
       }),
-      // client.startService({
-      //   taskQueue: "youtube",
-      //   workflowsPath,
-      //   functions: {
-      //     youtubeAddVideoToPlaylist,
-      //     youtubeCreatePlaylist,
-      //   },
-      //   options: {
-      //     rateLimit: 10,
-      //   },
-      // }),
-      // client.startService({
-      //   taskQueue: "youtube-upload",
-      //   workflowsPath,
-      //   functions: {
-      //     youtubeUpload,
-      //   },
-      //   options: {
-      //     rateLimit: 1 / (6 * 24 * 60 * 60), // Default quota 6 per day
-      //   },
-      // }),
-      azureSpeechService({ client }),
-      lumaaiService({ client }),
       openaiService({ client }),
       falService({ client }),
+      azureSpeechService({ client }),
+      lumaaiService({ client }),
+      client.startService({
+        taskQueue: "youtube",
+        functions: {
+          youtubeAddVideoToPlaylist,
+          youtubeCreatePlaylist,
+        },
+        options: {
+          rateLimit: 10,
+        },
+      }),
+      client.startService({
+        taskQueue: "youtube-upload",
+        functions: {
+          youtubeUpload,
+        },
+        options: {
+          rateLimit: 1 / (6 * 24 * 60 * 60), // Default quota 6 per day
+        },
+      }),
     ]);
 
     console.log("Services running successfully.");

@@ -11,10 +11,14 @@ export type SerieType = Database["public"]["Tables"]["series"]["Row"] & {
 };
 export default async function Series() {
   const supabase = createClient();
-  const { data: series } = await supabase.from("series").select(`
+  const { data: series } = await supabase
+    .from("series")
+    .select(
+      `
         id, 
         title, 
-        prompt, 
+        prompt,
+        status,
         images(
             id, 
             title, 
@@ -25,7 +29,9 @@ export default async function Series() {
             content_type, 
             created_at
         )
-    `);
+    `
+    )
+    .order("created_at", { ascending: false });
 
   return (
     <>

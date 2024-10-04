@@ -16,45 +16,36 @@ import { MoreVertical } from "lucide-react";
 import Image from "next/image";
 import { triggerWorkflow } from "../actions/trigger";
 import { SerieType } from "./page";
+import { Dialog, DialogContent, DialogTrigger } from "../components/ui/dialog";
+import { useState } from "react";
+import { SeriePreviews } from "./SeriePreviews";
 
-export function SeriesCard({
-  series,
-  enabled,
-}: {
-  series: SerieType;
-  enabled?: boolean;
-}) {
-  const { title, prompt, images } = series;
+export function SeriesCard({ series }: { series: SerieType }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { title, prompt, images, status } = series;
 
   console.log("images", images);
   const imageUrl = images[0].url;
 
   const handleCreateVideos = async (event: React.FormEvent) => {
-    const workflowPromises = images.map((image) =>
-      triggerWorkflow("createVideo", {
-        title: image.title,
-        prompt: image.prompt,
-        fromImageUrl: image.url,
-        uploadToYoutube: false,
-        seriesId: series.id,
-      })
-    );
-
-    const workflowResults = await Promise.all(workflowPromises);
-    console.log("workflowResults", workflowResults);
+    const workflowResult = await triggerWorkflow("launchSerie", {
+      serieId: series.id,
+      createPlaylist: false,
+    });
+    console.log("workflowResult", workflowResult);
   };
 
   const handleDelete = () => {
     // todo
   };
 
+  const handleClose = () => setIsDialogOpen(false);
+
   return (
     <Card key={series.id}>
       <CardHeader className="space-y-5">
         <div className="flex justify-between items-center">
-          <CardTitle className={!enabled ? "opacity-50" : ""}>
-            {title}
-          </CardTitle>
+          <CardTitle>{title} </CardTitle>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -63,27 +54,40 @@ export function SeriesCard({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleCreateVideos}>
-                Start creating videos
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {}}>
-                {enabled ? "Disable" : "Enable"}
-              </DropdownMenuItem>
+              {status === "NEW" && (
+                <DropdownMenuItem onClick={handleCreateVideos}>
+                  Launch
+                </DropdownMenuItem>
+              )}
+              {status === "LIVE" && (
+                <DropdownMenuItem onClick={() => {}}>Pause</DropdownMenuItem>
+              )}
+              {status === "PAUSED" && (
+                <DropdownMenuItem onClick={() => {}}>Resume</DropdownMenuItem>
+              )}
               <DropdownMenuItem onClick={handleDelete}>Delete</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
         <CardContent>
-          <Image
-            src={imageUrl}
-            alt={title}
-            width={160}
-            height={90}
-            className="rounded-md"
-          />
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Image
+                src={imageUrl}
+                alt={title}
+                width={180}
+                height={320}
+                className="rounded-md shadow-md"
+              />
+            </DialogTrigger>
+            <DialogContent>
+              <SeriePreviews serie={series} onClose={handleClose} />
+            </DialogContent>
+          </Dialog>
         </CardContent>
-        <CardDescription className="line-clamp-3 hover:line-clamp-none pr-10 h-10">
-          {prompt}
+        <CardDescription className="line-clamp-6 hover:line-clamp-none">
+          <p>{status}</p>
+          <p>{prompt}</p>
         </CardDescription>
       </CardHeader>
     </Card>

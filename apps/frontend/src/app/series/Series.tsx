@@ -38,7 +38,7 @@ export default function SeriesList({ series }: { series?: SerieType[] }) {
       </div>
       <Separator />
       <div className="p-4">
-        <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-3 xl:grid-cols-6">
+        <div className="items-start justify-center gap-6 rounded-lg md:grid lg:grid-cols-4 xl:grid-cols-6">
           {series && series.map((series) => <SeriesCard series={series} />)}
         </div>
       </div>

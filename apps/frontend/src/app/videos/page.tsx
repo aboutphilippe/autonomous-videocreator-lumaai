@@ -11,8 +11,14 @@ export type VideoType = Database["public"]["Tables"]["videos"]["Row"];
 
 export default async function Videos() {
   const supabase = createClient();
-  const { data: videos } = await supabase.from("videos").select();
-  const { data: series } = await supabase.from("series").select(`id, title`);
+  const { data: videos } = await supabase
+    .from("videos")
+    .select()
+    .order("created_at", { ascending: false });
+  const { data: series } = await supabase
+    .from("series")
+    .select(`id, title`)
+    .order("created_at", { ascending: false });
 
   const filterSeries = series?.map((serie) => ({
     label: serie.title,

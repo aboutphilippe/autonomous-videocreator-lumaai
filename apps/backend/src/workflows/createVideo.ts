@@ -58,7 +58,7 @@ export async function createVideo({
     throw new Error("No audio prompt");
   }
 
-  await step<typeof functions>({}).supabaseUpsertVideo({
+  await step<typeof functions>({ taskQueue: "supabase" }).supabaseUpsertVideo({
     video: {
       series_id: serieId,
       title: title,
@@ -100,7 +100,6 @@ export async function createVideo({
       aspectRatio: "9:16",
       extendGenerationId: previousGenerationId,
       fromImageUrl: previousGenerationId ? undefined : publicUrl,
-      loop: true,
     });
 
     log.info(`queuedGeneration ${i + 1}`, { queuedGeneration });
@@ -134,6 +133,19 @@ export async function createVideo({
       taskQueue: "gcp",
     }).uploadVideoToBucket({
       outputPath,
+    });
+
+    await step<typeof functions>({
+      taskQueue: "supabase",
+    }).supabaseUpsertVideo({
+      video: {
+        series_id: serieId,
+        title: title,
+        description: audioPrompt,
+        status: "DRAFT",
+        thumbnail_url: fromImageUrl ?? "",
+        video_url: videoUrl,
+      },
     });
 
     if (uploadToYoutube && userId) {
