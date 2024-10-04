@@ -33,17 +33,17 @@ importers:
         specifier: ^20.0.0
         version: 20.0.0
       '@restackio/integrations-azurespeech':
+        specifier: ^0.0.7
+        version: 0.0.7
+      '@restackio/integrations-fal':
         specifier: ^0.0.6
         version: 0.0.6
-      '@restackio/integrations-fal':
-        specifier: ^0.0.5
-        version: 0.0.5
       '@restackio/integrations-lumaai':
-        specifier: ^0.0.9
-        version: 0.0.9
+        specifier: ^0.0.10
+        version: 0.0.10
       '@restackio/integrations-openai':
-        specifier: ^0.0.23
-        version: 0.0.23(zod@3.23.8)
+        specifier: ^0.0.24
+        version: 0.0.24(zod@3.23.8)
       '@restackio/restack-sdk-ts':
         specifier: ^0.0.74
         version: 0.0.74(@swc/helpers@0.5.5)
@@ -192,13 +192,13 @@ importers:
     devDependencies:
       '@tailwindcss/aspect-ratio':
         specifier: ^0.4.2
-        version: 0.4.2(tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)))
+        version: 0.4.2(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)))
       '@tailwindcss/forms':
         specifier: ^0.5.9
-        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)))
+        version: 0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)))
       '@tailwindcss/typography':
         specifier: ^0.5.15
-        version: 0.5.15(tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)))
+        version: 0.5.15(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)))
       '@types/node':
         specifier: ^20
         version: 20.16.10
@@ -222,7 +222,7 @@ importers:
         version: 8.4.47
       tailwindcss:
         specifier: ^3.4.13
-        version: 3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2))
+        version: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2))
       typescript:
         specifier: ^5
         version: 5.6.2
@@ -1287,17 +1287,17 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
-  '@restackio/integrations-azurespeech@0.0.6':
-    resolution: {integrity: sha512-y8ejgSja4TQG6feSZ9E4LiPFqs2oFUnX81+znibaKFsIQPNJndiP4QsnDNWWiC/3jq8Ey/OSw4ja/MbAY4njcA==}
+  '@restackio/integrations-azurespeech@0.0.7':
+    resolution: {integrity: sha512-BUmC88ad3sFQQgHTkFHCYFWkRmLroPP1sFmpgvlV/9RxgvVa6pwUna7SVh32FrkMT2AXmHDeMvAWXh/z1uYunQ==}
 
-  '@restackio/integrations-fal@0.0.5':
-    resolution: {integrity: sha512-53SKfsmdyND7Ys22Zxe/jF5g/vAhfAzM910p3/47BrSGNKAeHWs+szdRIx1jnpnPdhrQvX1NkGdvfUVXxTZW4g==}
+  '@restackio/integrations-fal@0.0.6':
+    resolution: {integrity: sha512-pezHYnPdg9/OrqxP7AoBV7n1YXn3K6WoJjQlazLX/tKAsE+VesAvn2WgXIbU5gfEyH7dWUlPMntpaGpEEFV4Mg==}
 
-  '@restackio/integrations-lumaai@0.0.9':
-    resolution: {integrity: sha512-MZhISqCKByxjTWUs3VAQDHohU3o7MxEJVMaQf/NF4fQwmYpZQVTS8OWoVItFf09lnTn2sU7ni9yr9n8pKiAM1A==}
+  '@restackio/integrations-lumaai@0.0.10':
+    resolution: {integrity: sha512-K/D3jbx7SGUgA+/uPwkfA2K6TQcmuqkywVG54Q4qQwW2bQP+J2oozl+3dLy48nM+FSPttYJ5Qzbdcl5Z3AH4mQ==}
 
-  '@restackio/integrations-openai@0.0.23':
-    resolution: {integrity: sha512-cTKk3mirbn25i4S/wG5b0o6gAoiPojkHptIP0q/C0aTLysm/Ps0daL4cVY/Q0hXmKfXLQ9+rxHkJOLS5zhMYrw==}
+  '@restackio/integrations-openai@0.0.24':
+    resolution: {integrity: sha512-CqkZaLobYV+mfTjTz0vcRctb16JA0KclHC3h1aKjJiylB5ht3LigC0tYWJaApDBSvUbMoA7v5QueWR9Q8fJslQ==}
 
   '@restackio/restack-sdk-cloud-ts@1.0.16':
     resolution: {integrity: sha512-oIanzD6ym6c+hZ6eMJozTaIxGmMn1hPZRwogzz4v2hdd40IpdbwuHc98bPrHjswS1rZa+vjPjLbKoSuLlZloOQ==}
@@ -5265,7 +5265,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
-  '@restackio/integrations-azurespeech@0.0.6':
+  '@restackio/integrations-azurespeech@0.0.7':
     dependencies:
       microsoft-cognitiveservices-speech-sdk: 1.40.0
     transitivePeerDependencies:
@@ -5273,17 +5273,17 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@restackio/integrations-fal@0.0.5':
+  '@restackio/integrations-fal@0.0.6':
     dependencies:
       '@fal-ai/serverless-client': 0.14.3
 
-  '@restackio/integrations-lumaai@0.0.9':
+  '@restackio/integrations-lumaai@0.0.10':
     dependencies:
       lumaai: 1.0.2
     transitivePeerDependencies:
       - encoding
 
-  '@restackio/integrations-openai@0.0.23(zod@3.23.8)':
+  '@restackio/integrations-openai@0.0.24(zod@3.23.8)':
     dependencies:
       openai: 4.66.1(zod@3.23.8)
     transitivePeerDependencies:
@@ -5422,22 +5422,22 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
-  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)))':
+  '@tailwindcss/aspect-ratio@0.4.2(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)))':
     dependencies:
-      tailwindcss: 3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2))
+      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2))
 
-  '@tailwindcss/forms@0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)))':
+  '@tailwindcss/forms@0.5.9(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)))':
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2))
+      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2))
 
-  '@tailwindcss/typography@0.5.15(tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)))':
+  '@tailwindcss/typography@0.5.15(tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)))':
     dependencies:
       lodash.castarray: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2))
+      tailwindcss: 3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2))
 
   '@tanstack/react-table@8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -7841,7 +7841,7 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.47
 
-  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)):
+  postcss-load-config@4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.5.1
@@ -8393,7 +8393,7 @@ snapshots:
 
   tailwind-merge@2.5.2: {}
 
-  tailwindcss@3.4.13(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2)):
+  tailwindcss@3.4.13(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -8412,7 +8412,7 @@ snapshots:
       postcss: 8.4.47
       postcss-import: 15.1.0(postcss@8.4.47)
       postcss-js: 4.0.1(postcss@8.4.47)
-      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@types/node@20.16.10)(typescript@5.6.2))
+      postcss-load-config: 4.0.2(postcss@8.4.47)(ts-node@10.9.2(@swc/core@1.7.26(@swc/helpers@0.5.5))(@types/node@20.16.10)(typescript@5.6.2))
       postcss-nested: 6.2.0(postcss@8.4.47)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.8

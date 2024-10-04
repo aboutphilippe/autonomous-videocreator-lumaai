@@ -32,7 +32,7 @@ export function SeriePreviews({
           <div className="space-y-5">
             <h2>Previews</h2>
             {serie.images.length > 0 && (
-              <div className="grid grid-cols-3 gap-4 overflow-y-auto max-h-dvh">
+              <div className="grid grid-cols-4 gap-4 overflow-y-auto max-h-dvh">
                 {serie.images.map((image) => (
                   <div key={image.id} className="space-y-2 relative group">
                     <h3 className="h-20 line-clamp-2">{image.title}</h3>
