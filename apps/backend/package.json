@@ -1,0 +1,53 @@
+{
+  "name": "@autonomous-video-production/backend",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node src/services.ts",
+    "start.watch": "nodemon src/services.ts",
+    "dev": "pnpm start.watch",
+    "build": "tsc --build",
+    "clean": "rm -rf node_modules",
+    "workflow": "ts-node ./scheduleWorkflow.ts",
+    "restack-up": "node restack_up.mjs"
+  },
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "ext": "ts",
+    "watch": [
+      "src"
+    ]
+  },
+  "dependencies": {
+    "@ai-sdk/mistral": "^0.0.42",
+    "@google-cloud/local-auth": "^3.0.1",
+    "@google-cloud/storage": "^7.13.0",
+    "@googleapis/youtube": "^20.0.0",
+    "@restackio/integrations-azurespeech": "^0.0.7",
+    "@restackio/integrations-fal": "^0.0.6",
+    "@restackio/integrations-lumaai": "^0.0.10",
+    "@restackio/integrations-openai": "^0.0.24",
+    "@restackio/ai": "^0.0.75",
+    "@supabase/supabase-js": "^2.45.4",
+    "@temporalio/workflow": "^1.11.2",
+    "ai": "^3.4.7",
+    "dotenv": "^16.4.5",
+    "fluent-ffmpeg": "^2.1.3",
+    "googleapis": "^144.0.0",
+    "node-fetch": "^3.3.2",
+    "sharp": "^0.33.5",
+    "zod": "^3.23.8",
+    "zod-to-json-schema": "^3.23.3"
+  },
+  "devDependencies": {
+    "@restackio/restack-sdk-cloud-ts": "^1.0.15",
+    "@types/fluent-ffmpeg": "^2.1.26",
+    "@types/node": "^20.16.9",
+    "@types/uuid": "^10.0.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.2"
+  }
+}
