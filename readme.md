@@ -1,7 +1,7 @@
 # Autonomous Video Production
 
 A fully autonomous video production that creates shorts for Youtube/Tiktok using OpenAI AI for script, Azure TTS for audio and Luma AI for video.
-In these example, we wanted to programatically make LEGO figurine shorts.
+In thes example screenshots, we are programatically making series of YouTube shorts for LEGO figurines adventures.
 
 Create and preview series
 ![localhost_3000_(Desktop)](https://github.com/user-attachments/assets/36fef5a0-71f9-4f52-93bc-510abd60c1a2)
