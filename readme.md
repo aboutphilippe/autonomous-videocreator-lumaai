@@ -32,6 +32,17 @@ docker run -d --pull always --name studio -p 5233:5233 -p 6233:6233 -p 7233:7233
 
 Learn more at https://www.restack.io
 
+4. Run Supabase
+
+```
+cd supabase
+```
+
+pnpm dev
+
+```
+(It will also generate types for frontend and backend)
+
 4. Run `pnpm run dev`
 
 ## Tech stack
@@ -43,3 +54,4 @@ Learn more at https://www.restack.io
 - Restack AI SDK
 - Stable Diffusion
 - ElevenLabs
+```
