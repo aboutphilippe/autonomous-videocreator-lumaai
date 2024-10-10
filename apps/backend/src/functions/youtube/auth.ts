@@ -1,5 +1,5 @@
 import { google } from "googleapis";
-import { log } from "@restackio/restack-sdk-ts/function";
+import { log } from "@restackio/ai/function";
 
 let globalAccessToken: string | null = null;
 let globalRefreshToken: string | null = null;

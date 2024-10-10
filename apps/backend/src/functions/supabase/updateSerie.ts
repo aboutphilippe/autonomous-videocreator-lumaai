@@ -1,4 +1,4 @@
-import { FunctionFailure, log } from "@restackio/restack-sdk-ts/function";
+import { FunctionFailure, log } from "@restackio/ai/function";
 import { supabaseClient } from "./client";
 
 export async function supabaseUpdateSerie({

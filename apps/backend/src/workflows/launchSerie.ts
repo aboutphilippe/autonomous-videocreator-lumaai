@@ -1,4 +1,4 @@
-import { startChild, step } from "@restackio/restack-sdk-ts/workflow";
+import { startChild, step } from "@restackio/ai/workflow";
 import * as functions from "../functions";
 import { createVideo } from "./createVideo";
 

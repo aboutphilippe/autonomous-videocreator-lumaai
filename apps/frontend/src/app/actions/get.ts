@@ -1,5 +1,5 @@
 "use server";
-import Restack from "@restackio/restack-sdk-ts";
+import Restack from "@restackio/ai";
 
 const connectionOptions = {
   engineId: process.env.RESTACK_ENGINE_ID!,

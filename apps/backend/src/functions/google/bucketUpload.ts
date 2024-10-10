@@ -1,5 +1,5 @@
 import { Storage } from "@google-cloud/storage";
-import { log } from "@restackio/restack-sdk-ts/function";
+import { log } from "@restackio/ai/function";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import sharp from "sharp";

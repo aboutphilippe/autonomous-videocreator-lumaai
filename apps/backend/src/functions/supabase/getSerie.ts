@@ -1,4 +1,4 @@
-import { FunctionFailure } from "@restackio/restack-sdk-ts/function";
+import { FunctionFailure } from "@restackio/ai/function";
 import { supabaseClient } from "./client";
 
 export async function supabaseGetSerie({ serieId }: { serieId: string }) {

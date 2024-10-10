@@ -1,4 +1,4 @@
-import { log, step, sleep } from "@restackio/restack-sdk-ts/workflow";
+import { log, step, sleep } from "@restackio/ai/workflow";
 import * as functions from "../functions";
 import { azureSpeechTaskQueue } from "@restackio/integrations-azurespeech/taskQueue";
 import * as azureSpeechFunctions from "@restackio/integrations-azurespeech/functions";

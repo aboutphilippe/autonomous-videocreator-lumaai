@@ -1,4 +1,4 @@
-import { log } from "@restackio/restack-sdk-ts/function";
+import { log } from "@restackio/ai/function";
 import ffmpeg from "fluent-ffmpeg";
 import fs from "fs";
 import https from "https"; // Use the built-in https module
