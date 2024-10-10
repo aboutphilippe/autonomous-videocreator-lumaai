@@ -32,6 +32,9 @@ importers:
       '@googleapis/youtube':
         specifier: ^20.0.0
         version: 20.0.0
+      '@restackio/ai':
+        specifier: ^0.0.75
+        version: 0.0.75(@swc/helpers@0.5.5)
       '@restackio/integrations-azurespeech':
         specifier: ^0.0.7
         version: 0.0.7
@@ -44,9 +47,6 @@ importers:
       '@restackio/integrations-openai':
         specifier: ^0.0.24
         version: 0.0.24(zod@3.23.8)
-      '@restackio/restack-sdk-ts':
-        specifier: ^0.0.74
-        version: 0.0.74(@swc/helpers@0.5.5)
       '@supabase/supabase-js':
         specifier: ^2.45.4
         version: 2.45.4
@@ -138,9 +138,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.10)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@restackio/restack-sdk-ts':
-        specifier: ^0.0.74
-        version: 0.0.74(@swc/helpers@0.5.5)
+      '@restackio/ai':
+        specifier: ^0.0.75
+        version: 0.0.75(@swc/helpers@0.5.5)
       '@supabase/ssr':
         specifier: ^0.5.1
         version: 0.5.1(@supabase/supabase-js@2.45.4)
@@ -1287,6 +1287,10 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
+  '@restackio/ai@0.0.75':
+    resolution: {integrity: sha512-Q3IKIJHseWM+CDoZWvgPmuv15ryZkHsCY2jq6FbdnW44MMjOOcI3QUbpZJPHLGlLZ5ucnSbQxiZBvHDDnOZfVQ==}
+    engines: {node: '>=20'}
+
   '@restackio/integrations-azurespeech@0.0.7':
     resolution: {integrity: sha512-BUmC88ad3sFQQgHTkFHCYFWkRmLroPP1sFmpgvlV/9RxgvVa6pwUna7SVh32FrkMT2AXmHDeMvAWXh/z1uYunQ==}
 
@@ -1302,10 +1306,6 @@ packages:
   '@restackio/restack-sdk-cloud-ts@1.0.16':
     resolution: {integrity: sha512-oIanzD6ym6c+hZ6eMJozTaIxGmMn1hPZRwogzz4v2hdd40IpdbwuHc98bPrHjswS1rZa+vjPjLbKoSuLlZloOQ==}
     engines: {node: '>=18'}
-
-  '@restackio/restack-sdk-ts@0.0.74':
-    resolution: {integrity: sha512-LT1JXyiHZ3K40A2bobtp/n8bqV2XQVno2D/QuE7ka36MILeYMhdq7cMjmdSQQVMcTNOSO389ltHOdbl3yT8fxQ==}
-    engines: {node: '>=20'}
 
   '@rtsao/scc@1.1.0':
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
@@ -5265,6 +5265,18 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
+  '@restackio/ai@0.0.75(@swc/helpers@0.5.5)':
+    dependencies:
+      '@temporalio/activity': 1.11.2
+      '@temporalio/client': 1.11.2
+      '@temporalio/worker': 1.11.2(@swc/helpers@0.5.5)
+      '@temporalio/workflow': 1.11.2
+    transitivePeerDependencies:
+      - '@swc/helpers'
+      - esbuild
+      - uglify-js
+      - webpack-cli
+
   '@restackio/integrations-azurespeech@0.0.7':
     dependencies:
       microsoft-cognitiveservices-speech-sdk: 1.40.0
@@ -5300,18 +5312,6 @@ snapshots:
       zod: 3.23.8
     transitivePeerDependencies:
       - supports-color
-
-  '@restackio/restack-sdk-ts@0.0.74(@swc/helpers@0.5.5)':
-    dependencies:
-      '@temporalio/activity': 1.11.2
-      '@temporalio/client': 1.11.2
-      '@temporalio/worker': 1.11.2(@swc/helpers@0.5.5)
-      '@temporalio/workflow': 1.11.2
-    transitivePeerDependencies:
-      - '@swc/helpers'
-      - esbuild
-      - uglify-js
-      - webpack-cli
 
   '@rtsao/scc@1.1.0': {}
 
